@@ -1,7 +1,3 @@
-from datetime import datetime
-
-DATE_FORMAT = "%Y%m%d"
-
 
 def parse_file(name_file):
     '''
@@ -10,33 +6,29 @@ def parse_file(name_file):
     '''
 
     file = name_file.replace(".", "_")
-    list = file.split("_")
+    parse = file.split("_")
 
-    return list
-
-
-# for file in
-# parse_file(Prod[1], 'type')
+    return parse
 
 
-def stage(scan):
-    Prod = []
-    Mix = []
-    Mast = []
-
-    for file in scan:
-        if 'Prod' in file:
-            Prod.append(file)
-        elif 'Mix' in file:
-            Mix.append(file)
-        else:
-            Mast.append(file)
-
-    print(f"Production files \n {Prod}")
-    print(f"Mixing files \n {Mix}")
-    print(f"Master files \n {Mast}")
-
-    return Prod, Mix, Mast
+# def stage(scan):
+#     Prod = []
+#     Mix = []
+#     Mast = []
+#
+#     for file in scan:
+#         if 'Prod' in file:
+#             Prod.append(file)
+#         elif 'Mix' in file:
+#             Mix.append(file)
+#         else:
+#             Mast.append(file)
+#
+#     print(f"Production files \n {Prod}")
+#     print(f"Mixing files \n {Mix}")
+#     print(f"Master files \n {Mast}")
+#
+#     return Prod, Mix, Mast
 
 # Prod, Mix, Mast = stage(scanner)
 
