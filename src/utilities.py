@@ -1,3 +1,5 @@
+import pandas as pd
+
 
 def parse_file(name_file):
     '''
@@ -6,10 +8,22 @@ def parse_file(name_file):
     '''
 
     file = name_file.replace(".", "_")
-    parse = file.split("_")
+    parse = file.split("_")[:-1]
 
     return parse
 
+
+def list_to_dataframe(data_list, column_names=None):
+    '''
+    :param data_list: List of elements to convert
+    :param column_names: Insert the names of the columns
+    :return: A data frame
+    '''
+    if column_names:
+        df = pd.DataFrame([data_list], columns=column_names)
+    else:
+        df = pd.DataFrame([data_list])
+    return df
 
 # def stage(scan):
 #     Prod = []
