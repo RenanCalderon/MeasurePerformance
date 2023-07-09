@@ -1,4 +1,8 @@
+import logging
 import pandas as pd
+
+LOG = logging.getLogger()
+LOG.setLevel('INFO')
 
 
 def parse_file(name_file):
@@ -25,26 +29,18 @@ def list_to_dataframe(data_list, column_names=None):
         df = pd.DataFrame([data_list])
     return df
 
-# def stage(scan):
-#     Prod = []
-#     Mix = []
-#     Mast = []
-#
-#     for file in scan:
-#         if 'Prod' in file:
-#             Prod.append(file)
-#         elif 'Mix' in file:
-#             Mix.append(file)
-#         else:
-#             Mast.append(file)
-#
-#     print(f"Production files \n {Prod}")
-#     print(f"Mixing files \n {Mix}")
-#     print(f"Master files \n {Mast}")
-#
-#     return Prod, Mix, Mast
 
-# Prod, Mix, Mast = stage(scanner)
+def days_track(dates):
+    total_days = (dates.diff() / pd.Timedelta(days=1)).fillna(0).sum()
+    # n_days = (dates.max() - dates.min()).days
+    LOG.info(f"Days on the project: {total_days} days")
+    return total_days
 
 
-
+def days_stages(df):
+    # Measure the days between stages on the proyect
+    stage_days = df.groupby('stage')['datetime'].diff() / pd.Timedelta(days=1)
+    stage_days = stage_days.fillna(1)
+    stage_totals = stage_days.groupby(df['stage']).sum()
+    LOG.info(f"stages days: {stage_totals}")
+    return stage_totals
