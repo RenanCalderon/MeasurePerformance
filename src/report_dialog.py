@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import (QDialog, QLabel, QVBoxLayout)
+from PyQt5.QtWidgets import QDialog, QLabel, QVBoxLayout
 
 
 class ReportDialog(QDialog):
