@@ -1,10 +1,18 @@
 import os
 import sys
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QFileDialog, QMessageBox, QVBoxLayout,
-                             QWidget, QListWidget, QPushButton, QLineEdit)
+import logging as LOG
+
+import pandas as pd
+
+from src.utilities import *
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QVBoxLayout, QWidget, QListWidget, QPushButton, QLineEdit
 from PyQt5.QtCore import Qt
 
 DEFAULT_DIRECTORY = r"C:\Users\renan\Documents\Ableton\Projects"
+COLUMN_NAMES = ["Name", "Key", "Stage", "Date"]
+
+# Configuración de logging
+LOG.basicConfig(filename='tests/app_logs/app.log', level=LOG.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -54,13 +62,24 @@ class MainWindow(QMainWindow):
         files = os.listdir(folder)
         sorted_files = sorted(files, key=lambda x: os.path.splitext(x)[1])
         self.list_widget.addItems(sorted_files)
+        LOG.info("Listed files in folder: {}".format(folder))
 
     def analyze_files(self):
-        selected_files = [item.text() for item in self.list_widget.selectedItems()]
-        if selected_files:
-            QMessageBox.information(self, "Selected Files", "\n".join(selected_files))
+        folder = self.folder_edit.text()
+        als_files = [file for file in os.listdir(folder) if file.endswith(".als")]
+        if als_files:
+            LOG.info("Performing analysis on files...")
+            df = pd.DataFrame()
+            for file in als_files:
+                sets = list_to_dataframe(parse_file(file), column_names=COLUMN_NAMES)
+                df = pd.concat([df, sets])
+
+            LOG.info(f"DataFrame::: {df}")
+            QMessageBox.information(self, "Selected Files", "\n".join(als_files))
         else:
-            QMessageBox.warning(self, "No Files Selected", "Please select at least one file.")
+            LOG.warning("No .als files found in the selected folder.")
+            QMessageBox.warning(self, "No Files Found", "No .als files found in the selected folder.")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
