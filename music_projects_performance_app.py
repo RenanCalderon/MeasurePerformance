@@ -12,7 +12,7 @@ DEFAULT_DIRECTORY = r"C:\Users\renan\Documents\Ableton\Projects"
 COLUMN_NAMES = ["name", "key", "stage", "date"]
 
 # Configuration de logging
-logging.basicConfig(filename='tests/app_logs/app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class MainWindow(QMainWindow):
