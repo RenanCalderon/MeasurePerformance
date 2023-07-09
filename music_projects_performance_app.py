@@ -1,18 +1,19 @@
 import os
 import sys
-import logging as LOG
-
-import pandas as pd
+import logging
 
 from src.utilities import *
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QVBoxLayout, QWidget, QListWidget, QPushButton, QLineEdit
+from src.report_dialog import ReportDialog
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QFileDialog, QMessageBox, QVBoxLayout, QWidget,
+                             QListWidget, QPushButton, QLineEdit)
 from PyQt5.QtCore import Qt
 
 DEFAULT_DIRECTORY = r"C:\Users\renan\Documents\Ableton\Projects"
-COLUMN_NAMES = ["Name", "Key", "Stage", "Date"]
+COLUMN_NAMES = ["name", "key", "stage", "date"]
 
-# Configuración de logging
-LOG.basicConfig(filename='tests/app_logs/app.log', level=LOG.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configuration de logging
+logging.basicConfig(filename='tests/app_logs/app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -62,27 +63,36 @@ class MainWindow(QMainWindow):
         files = os.listdir(folder)
         sorted_files = sorted(files, key=lambda x: os.path.splitext(x)[1])
         self.list_widget.addItems(sorted_files)
-        LOG.info("Listed files in folder: {}".format(folder))
+        logging.info("Listed files in folder: {}".format(folder))
 
     def analyze_files(self):
         folder = self.folder_edit.text()
         als_files = [file for file in os.listdir(folder) if file.endswith(".als")]
         if als_files:
-            LOG.info("Performing analysis on files...")
+            logging.info("Performing analysis on files...")
             df = pd.DataFrame()
             for file in als_files:
                 sets = list_to_dataframe(parse_file(file), column_names=COLUMN_NAMES)
                 df = pd.concat([df, sets])
 
-            # Convertir la columna 'Fecha' al formato datetime
-            df['Date_Format'] = pd.to_datetime(df['Date'])
-            # Order data frame
-            df_sorted = df.sort_values('Date_Format')
+            # Convert column 'Date' to datetime & order data frame
+            df['datetime'] = pd.to_datetime(df['date'])
+            df = df.sort_values('datetime')
+            df['date_diff'] = df['datetime'].diff()
+            logging.info(f"DataFrame::: {df}")
 
-            LOG.info(f"DataFrame::: {df_sorted}")
-            QMessageBox.information(self, "Selected Files", "\n".join(als_files))
+            # Measure the days
+            days = days_track(df["datetime"])
+            stage_totals = days_stages(df)
+
+            # Create the report
+            report_text = f"Days on the project: {days} \nDay expended per Stage: {stage_totals}"
+            report_dialog = ReportDialog(report_text)
+            report_dialog.exec_()
+
+            # QMessageBox.information(self, "Selected Files", "\n".join(als_files))
         else:
-            LOG.warning("No .als files found in the selected folder.")
+            logging.warning("No .als files found in the selected folder.")
             QMessageBox.warning(self, "No Files Found", "No .als files found in the selected folder.")
 
 
