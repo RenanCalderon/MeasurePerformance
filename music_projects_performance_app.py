@@ -74,7 +74,12 @@ class MainWindow(QMainWindow):
                 sets = list_to_dataframe(parse_file(file), column_names=COLUMN_NAMES)
                 df = pd.concat([df, sets])
 
-            LOG.info(f"DataFrame::: {df}")
+            # Convertir la columna 'Fecha' al formato datetime
+            df['Date_Format'] = pd.to_datetime(df['Date'])
+            # Order data frame
+            df_sorted = df.sort_values('Date_Format')
+
+            LOG.info(f"DataFrame::: {df_sorted}")
             QMessageBox.information(self, "Selected Files", "\n".join(als_files))
         else:
             LOG.warning("No .als files found in the selected folder.")
