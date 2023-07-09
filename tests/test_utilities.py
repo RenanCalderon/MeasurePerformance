@@ -1,13 +1,10 @@
 import logging
-from src.utility import *
+from src.utilities import *
 
 LOG = logging.getLogger(__name__)
 
 test_case = "hola_G_Prod_20220819.als"
 
-
-def es_dataframe(variable):
-    return
 
 def test_parse():
     lista = parse_file(test_case)
