@@ -1,7 +1,6 @@
-import os
-import sys
-import logging
+import os, sys, logging
 
+from beatport.search import BeatportSearch
 from src.utilities import *
 from src.report_dialog import ReportDialog
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QFileDialog, QMessageBox, QVBoxLayout, QWidget,
@@ -20,7 +19,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Main window configuration
-        self.setWindowTitle("Performance Analyzer")
+        self.setWindowTitle("Music Suite")
         self.setGeometry(100, 100, 800, 600)
 
         # File list widget
