@@ -1,6 +1,5 @@
 import os, sys, logging
 
-from beatport.search import BeatportSearch
 from src.utilities import *
 from src.report_dialog import ReportDialog
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QFileDialog, QMessageBox, QVBoxLayout, QWidget,
