@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QWidget, QPushButton, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QWidget, QPushButton, QFileDialog, QLineEdit
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QColor, QPalette
 
@@ -92,7 +92,8 @@ class MainWindow(QMainWindow):
     def open_music_performance(self):
         folder_selected = QFileDialog.getExistingDirectory(self, "Select Folder", SEARCH_FOLDER)
         if folder_selected:
-            music_performance = MusicPerformance(folder_selected)
+            folder_edit = QLineEdit(folder_selected)
+            music_performance = MusicPerformance(folder_edit)
             music_performance.start_performance()
 
     def open_folder_manager(self):
