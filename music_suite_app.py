@@ -1,7 +1,12 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QWidget, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QWidget, QPushButton, QFileDialog
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QColor, QPalette
+
+from src.stacks.music_performance import MusicPerformance
+
+SEARCH_FOLDER = r"C:\Users\renan\Documents\Ableton\Projects"
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -85,7 +90,10 @@ class MainWindow(QMainWindow):
         print("Spotify functionality")
 
     def open_music_performance(self):
-        print("Music Performance functionality")
+        folder_selected = QFileDialog.getExistingDirectory(self, "Select Folder", SEARCH_FOLDER)
+        if folder_selected:
+            music_performance = MusicPerformance(folder_selected)
+            music_performance.start_performance()
 
     def open_folder_manager(self):
         print("Folder Manager functionality")
