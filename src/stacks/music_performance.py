@@ -4,7 +4,6 @@ from src.utilities import list_to_dataframe, parse_file, days_track, days_stages
 from src.report_dialog import ReportDialog
 from PyQt5.QtWidgets import QMessageBox
 
-DEFAULT_DIRECTORY = r"C:\Users\renan\Documents\Ableton\Projects"
 COLUMN_NAMES = ["name", "key", "stage", "date"]
 
 
