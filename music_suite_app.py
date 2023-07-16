@@ -4,8 +4,13 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QColor, QPalette
 
 from src.stacks.music_performance import MusicPerformance
+from src.log_config import setup_logger
+from config import config
 
-SEARCH_FOLDER = r"C:\Users\renan\Documents\Ableton\Projects"
+
+DEFAULT_DIRECTORY = config['directory']['default_folder']
+LOG = setup_logger()
+LOG.info(f"Default Folder: {DEFAULT_DIRECTORY}")
 
 
 class MainWindow(QMainWindow):
@@ -90,7 +95,7 @@ class MainWindow(QMainWindow):
         print("Spotify functionality")
 
     def open_music_performance(self):
-        folder_selected = QFileDialog.getExistingDirectory(self, "Select Folder", SEARCH_FOLDER)
+        folder_selected = QFileDialog.getExistingDirectory(self, "Select Folder", DEFAULT_DIRECTORY)
         if folder_selected:
             folder_edit = QLineEdit(folder_selected)
             music_performance = MusicPerformance(folder_edit)
