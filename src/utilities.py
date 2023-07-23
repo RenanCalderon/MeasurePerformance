@@ -32,7 +32,6 @@ def list_to_dataframe(data_list, column_names=None):
 
 def days_track(dates):
     total_days = (dates.diff() / pd.Timedelta(days=1)).fillna(0).sum()
-    # n_days = (dates.max() - dates.min()).days
     LOG.info(f"Days on the project: {total_days} days")
     return total_days
 
