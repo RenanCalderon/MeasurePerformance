@@ -2,9 +2,7 @@ import os
 import glob
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QLineEdit, QLabel, QPushButton, QVBoxLayout
 from PyQt5.QtCore import Qt
-from src.log_config import setup_logger
 
-LOG = setup_logger()
 
 class RenameALSDialog(QDialog):
     def __init__(self, current_name, parent=None):
