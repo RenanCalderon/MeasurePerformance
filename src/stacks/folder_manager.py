@@ -46,7 +46,7 @@ class RenameALSDialog(QDialog):
         layout.addWidget(button_box)
 
         self.setLayout(layout)
-        self.setWindowTitle("Rename ALS Files")
+        self.setWindowTitle("Rename Project")
 
         # Connect the cancel button to the reject slot to cancel the operation
         self.ok_button.clicked.connect(self.accept)
