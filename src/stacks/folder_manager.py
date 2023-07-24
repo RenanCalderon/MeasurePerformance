@@ -2,7 +2,9 @@ import os
 import glob
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QLineEdit, QLabel, QPushButton, QVBoxLayout
 from PyQt5.QtCore import Qt
+from src.log_config import setup_logger
 
+LOG = setup_logger()
 
 class RenameALSDialog(QDialog):
     def __init__(self, current_name, parent=None):
@@ -82,17 +84,26 @@ class FolderManager:
                 # Get the new name, key, and stage from the dialog
                 name, key, stage = dialog.get_user_input()
 
-                folder_path = os.path.dirname(latest_als_file)
-                for file in os.listdir(folder_path):
+                # Rename the folder with the Name and Key
+                new_folder_name = f"{name}_{key} Project"
+
+                new_folder_path = os.path.join(os.path.dirname(self.working_directory), new_folder_name)
+                os.rename(self.working_directory, new_folder_path)
+                print(f"Folder renamed to: {new_folder_name}")
+
+                # Update the working_directory attribute to the new folder path
+                self.working_directory = new_folder_path
+
+                for file in os.listdir(self.working_directory):
                     if file.endswith(".als"):
-                        old_file_path = os.path.join(folder_path, file)
+                        old_file_path = os.path.join(self.working_directory, file)
 
                         # Extract the date part from the current name (separated by "_")
                         date_part = file.split("_")[-1].replace(".als", "")
 
                         # Create the new file name with the parameters and the original date
                         new_file_name = f"{name}_{key}_{stage}_{date_part}.als"
-                        new_file_path = os.path.join(folder_path, new_file_name)
+                        new_file_path = os.path.join(self.working_directory, new_file_name)
                         os.rename(old_file_path, new_file_path)
                 print("Renaming completed.")
             else:
