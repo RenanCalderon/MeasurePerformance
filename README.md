@@ -1,6 +1,7 @@
 # Music Suite App
 
 Project for getting different functinalities in one App.
+Proyect Files Format Name: {name}\_{key}\_{type}_{date}.{filetype}
 The functionalities are the following:
 
 ## MeasurePerformance
@@ -15,8 +16,3 @@ To be defined
 
 ## Spotify
 To be defined
-
-Proyect Files:
-
-Name format
-{name}\_{key}\_{type}_{date}.{filetype}
