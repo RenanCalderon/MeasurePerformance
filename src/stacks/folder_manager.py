@@ -15,13 +15,24 @@ class RenameALSDialog(QDialog):
         label = QLabel(f"Current ALS file name: {self.current_name}")
         layout.addWidget(label)
 
-        # Input fields for prefix, suffix, and new name
-        self.prefix_edit = QLineEdit()
-        self.suffix_edit = QLineEdit()
-        self.new_name_edit = QLineEdit()
-        layout.addWidget(self.prefix_edit)
-        layout.addWidget(self.suffix_edit)
-        layout.addWidget(self.new_name_edit)
+        # Input fields for Name, Key, and Stage
+        label_name = QLabel("Name:")
+        self.name_edit = QLineEdit()
+        self.name_edit.setStyleSheet("color: black;")  # Set text color to black
+        layout.addWidget(label_name)
+        layout.addWidget(self.name_edit)
+
+        label_key = QLabel("Key:")
+        self.key_edit = QLineEdit()
+        self.key_edit.setStyleSheet("color: black;")  # Set text color to black
+        layout.addWidget(label_key)
+        layout.addWidget(self.key_edit)
+
+        label_stage = QLabel("Stage:")
+        self.stage_edit = QLineEdit()
+        self.stage_edit.setStyleSheet("color: black;")  # Set text color to black
+        layout.addWidget(label_stage)
+        layout.addWidget(self.stage_edit)
 
         # OK and Cancel buttons aligned in a row
         button_box = QDialogButtonBox()
@@ -37,11 +48,15 @@ class RenameALSDialog(QDialog):
         self.setLayout(layout)
         self.setWindowTitle("Rename ALS Files")
 
+        # Connect the cancel button to the reject slot to cancel the operation
+        self.ok_button.clicked.connect(self.accept)
+        self.cancel_button.clicked.connect(self.reject)
+
     def get_user_input(self):
-        prefix = self.prefix_edit.text()
-        suffix = self.suffix_edit.text()
-        new_name = self.new_name_edit.text()
-        return prefix, suffix, new_name
+        name = self.name_edit.text()
+        key = self.key_edit.text()
+        stage = self.stage_edit.text()
+        return name, key, stage
 
 
 class FolderManager:
@@ -64,8 +79,8 @@ class FolderManager:
             # Show the custom dialog with the current ALS file name
             dialog = RenameALSDialog(current_name)
             if dialog.exec_():
-                # Get the new prefix, suffix, and new name from the dialog
-                prefix, suffix, new_name = dialog.get_user_input()
+                # Get the new name, key, and stage from the dialog
+                name, key, stage = dialog.get_user_input()
 
                 folder_path = os.path.dirname(latest_als_file)
                 for file in os.listdir(folder_path):
@@ -75,7 +90,8 @@ class FolderManager:
                         # Extract the date part from the current name (separated by "_")
                         date_part = file.split("_")[-1].replace(".als", "")
 
-                        new_file_name = f"{prefix}{date_part}_{new_name}_{suffix}.als"
+                        # Create the new file name with the parameters and the original date
+                        new_file_name = f"{name}_{key}_{stage}_{date_part}.als"
                         new_file_path = os.path.join(folder_path, new_file_name)
                         os.rename(old_file_path, new_file_path)
                 print("Renaming completed.")
