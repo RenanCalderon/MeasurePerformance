@@ -19,7 +19,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Main window configuration
-        self.setWindowTitle("Music App")
+        self.setWindowTitle("Music Suite")
         self.setGeometry(100, 100, 800, 600)
 
         # Set dark application theme
