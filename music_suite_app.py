@@ -6,8 +6,7 @@ from PyQt5.QtGui import QFont, QColor, QPalette
 from src.stacks.music_performance import MusicPerformance
 from src.stacks.folder_manager import FolderManager
 from src.log_config import setup_logger
-from config import config
-
+import config
 
 DEFAULT_DIRECTORY = config['directory']['default_folder']
 LOG = setup_logger()
