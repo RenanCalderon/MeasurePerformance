@@ -1,13 +1,8 @@
 import mysql.connector
 from tests.db.config_db_test import config
 
-database_name = "MusicDB"
-host = config["database"]["mysql_host"]
-user = config["database"]["mysql_user"]
-password = config["database"]["mysql_password"]
 
-
-def create_connection():
+def create_connection(host, user, password, database_name):
     # Configure the connection to MySQL Server
     connection = mysql.connector.connect(host=host,
                                          user=user,
@@ -16,7 +11,14 @@ def create_connection():
     return connection
 
 
-def create_database(connection):
+def create_database(host, user, password, database_name):
+    # Configure the connection to MySQL Server
+    connection = mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password
+    )
+
     # Use the provided connection to create the database
     create_database_query = f"CREATE DATABASE IF NOT EXISTS {database_name};"
     cursor = connection.cursor()
@@ -24,8 +26,13 @@ def create_database(connection):
     cursor.close()
     connection.commit()
 
+    return connection
+
 
 def delete_database(connection):
+    # Extract the database name from the connection object
+    database_name = connection.database
+
     # Delete the database if it exists
     delete_database_query = f"DROP DATABASE IF EXISTS {database_name};"
     cursor = connection.cursor()
