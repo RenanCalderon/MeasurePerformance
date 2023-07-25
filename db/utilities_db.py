@@ -1,5 +1,5 @@
 import mysql.connector
-from config_db import config
+from tests.db.config_db_test import config
 
 database_name = "MusicDB"
 host = config["database"]["mysql_host"]
@@ -21,6 +21,15 @@ def create_database(connection):
     create_database_query = f"CREATE DATABASE IF NOT EXISTS {database_name};"
     cursor = connection.cursor()
     cursor.execute(create_database_query)
+    cursor.close()
+    connection.commit()
+
+
+def delete_database(connection):
+    # Delete the database if it exists
+    delete_database_query = f"DROP DATABASE IF EXISTS {database_name};"
+    cursor = connection.cursor()
+    cursor.execute(delete_database_query)
     cursor.close()
     connection.commit()
 
@@ -47,6 +56,21 @@ def create_table(connection, table_name):
     cursor.execute(create_table_query)
     cursor.close()
     connection.commit()
+
+
+def insert_data(connection, data_frame, table_name):
+    # Convert the Pandas DataFrame to a list of tuples for data insertion
+    data_to_insert = [tuple(row) for row in data_frame.values]
+
+    # Insert data into the table
+    insert_data_query = f"""
+    INSERT INTO {table_name} (ID, Order, Title, Artist, Genre, BPM, Key, Rating, Bitrate, Album_Artist, Comments, Date_Added)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    cursor = connection.cursor()
+    cursor.executemany(insert_data_query, data_to_insert)
+    connection.commit()
+    cursor.close()
 
 
 def delete_table(connection, table_name):
