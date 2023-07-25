@@ -1,30 +1,30 @@
-from db.utilities import *
+import mysql.connector
+import pandas as pd
 import pytest
+from db.utilities_db import *
 
-# Fixture to set up and tear down the database connection for each test
-@pytest.fixture
-def connection():
-    connection = create_connection()
-    yield connection
-    connection.close()
-
-
-# Test create_connection function
-def test_create_connection():
-    connection = create_connection()
-    assert connection.is_connected()
-    connection.close()
+database_name = "MusicDB_Test"
+host = config["database"]["mysql_host"]
+user = config["database"]["mysql_user"]
+password = config["database"]["mysql_password"]
 
 
 # Test create_database function
 def test_create_database(connection):
-    database_name = "MusicDB_Test"
-    create_database(connection)
+    create_database(host, user, password, database_name)
     cursor = connection.cursor()
     cursor.execute(f"SHOW DATABASES LIKE '{database_name}'")
     result = cursor.fetchall()
     assert len(result) == 1
     cursor.close()
+
+
+# Fixture to set up and tear down the database connection for each test
+@pytest.fixture
+def connection():
+    connection = create_connection(host, user, password, database_name)
+    yield connection
+    connection.close()
 
 
 # Test create_table function
@@ -40,8 +40,6 @@ def test_create_table(connection):
 
 # Test insert_data function
 def test_insert_data(connection):
-    import pandas as pd
-
     table_name = "your_table_test"  # Test table name
     data = {
         "ID": ["id1", "id2"],
@@ -81,7 +79,6 @@ def test_delete_table(connection):
 
 # Test delete_database function
 def test_delete_database(connection):
-    database_name = "MusicDB_Test"  # Test database name
     delete_database(connection)
     cursor = connection.cursor()
     cursor.execute(f"SHOW DATABASES LIKE '{database_name}'")
