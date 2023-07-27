@@ -2,5 +2,5 @@
 __pycache__/
 .venv/
 app.log
-config.py
+config*
 .idea/
