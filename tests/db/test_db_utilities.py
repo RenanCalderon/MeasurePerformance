@@ -10,13 +10,17 @@ password = config["database"]["mysql_password"]
 
 
 # Test create_database function
-def test_create_database(connection):
+def test_create_database():
     create_database(host, user, password, database_name)
-    cursor = connection.cursor()
+
+    connection_db = mysql.connector.connect(host=host, user=user, password=password)
+    cursor = connection_db.cursor()
     cursor.execute(f"SHOW DATABASES LIKE '{database_name}'")
     result = cursor.fetchall()
-    assert len(result) == 1
     cursor.close()
+    connection_db.close()
+
+    assert len(result) == 1
 
 
 # Fixture to set up and tear down the database connection for each test
