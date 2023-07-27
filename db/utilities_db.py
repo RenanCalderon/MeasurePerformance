@@ -1,9 +1,13 @@
 import mysql.connector
-from tests.db.config_db_test import config
+from db.config_db import config
 import logging
 
 LOG = logging.getLogger()
 LOG.setLevel("INFO")
+
+# Default Value
+QUERY_CREATE = config["query"]["songs_table"]
+QUERY_INSERT = config["query"]["songs_insert"]
 
 
 def create_connection(host, user, password, database_name):
@@ -63,43 +67,41 @@ def delete_database(connection):
         raise
 
 
-def create_table(connection, table_name):
+def create_table(connection, table_name, query=QUERY_CREATE):
     # Create a new table if it does not exist yet
-    create_table_query = f"""
-    CREATE TABLE IF NOT EXISTS {table_name} (
-        id VARCHAR(36) PRIMARY KEY,
-        song_order INT,
-        title VARCHAR(255),
-        artist VARCHAR(255),
-        genre VARCHAR(255),
-        bpm INT,
-        key_song VARCHAR(5),
-        rating FLOAT,
-        bitrate INT,
-        album_artist VARCHAR(255),
-        comments TEXT,
-        date_added DATE
-    );
-    """
+    create_table_query = query.format(table_name)
     cursor = connection.cursor()
-    cursor.execute(create_table_query)
-    cursor.close()
-    connection.commit()
+
+    try:
+        cursor.execute(create_table_query)
+        connection.commit()
+        LOG.info(f"Table {table_name} created successfully.")
+    except mysql.connector.Error as err:
+        LOG.error(f"Failed to create table: {err}")
+        connection.rollback()
+        raise
+    finally:
+        cursor.close()
 
 
-def insert_data(connection, data_frame, table_name):
+def insert_data(connection, data_frame, table_name, query=QUERY_INSERT):
     # Convert the Pandas DataFrame to a list of tuples for data insertion
     data_to_insert = [tuple(row) for row in data_frame.values]
 
     # Insert data into the table
-    insert_data_query = f"""
-    INSERT INTO {table_name} (id, song_order, title, artist, genre, bpm, key_song, rating, bitrate, album_artist, comments, date_added)
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-    """
+    insert_data_query = query.format(table_name)
     cursor = connection.cursor()
-    cursor.executemany(insert_data_query, data_to_insert)
-    connection.commit()
-    cursor.close()
+
+    try:
+        cursor.executemany(insert_data_query, data_to_insert)
+        connection.commit()
+        LOG.info(f"Data inserted into table {table_name} successfully.")
+    except mysql.connector.Error as err:
+        LOG.error(f"Failed to insert data into table: {err}")
+        connection.rollback()
+        raise
+    finally:
+        cursor.close()
 
 
 def delete_table(connection, table_name):
@@ -108,6 +110,14 @@ def delete_table(connection, table_name):
     DROP TABLE IF EXISTS {table_name};
     """
     cursor = connection.cursor()
-    cursor.execute(delete_table_query)
-    cursor.close()
-    connection.commit()
+
+    try:
+        cursor.execute(delete_table_query)
+        connection.commit()
+        LOG.info(f"Table {table_name} deleted successfully.")
+    except mysql.connector.Error as err:
+        LOG.error(f"Failed to delete table: {err}")
+        connection.rollback()
+        raise
+    finally:
+        cursor.close()
