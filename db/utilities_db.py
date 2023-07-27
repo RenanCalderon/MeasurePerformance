@@ -1,62 +1,84 @@
 import mysql.connector
 from tests.db.config_db_test import config
+import logging
+
+LOG = logging.getLogger()
+LOG.setLevel("INFO")
 
 
 def create_connection(host, user, password, database_name):
-    # Configure the connection to MySQL Server
-    connection = mysql.connector.connect(host=host,
-                                         user=user,
-                                         password=password,
-                                         database=database_name)
-    return connection
+    try:
+        # Configure the connection to MySQL Server
+        connection = mysql.connector.connect(host=host,
+                                             user=user,
+                                             password=password,
+                                             database=database_name)
+        LOG.info("Connection successful.")
+        return connection
+    except mysql.connector.Error as err:
+        LOG.error(f"Failed to connect to MySQL Server: {err}")
+        raise
 
 
 def create_database(host, user, password, database_name):
-    # Configure the connection to MySQL Server
-    connection = mysql.connector.connect(
-        host=host,
-        user=user,
-        password=password
-    )
+    try:
+        # Configure the connection to MySQL Server
+        connection = mysql.connector.connect(
+            host=host,
+            user=user,
+            password=password
+        )
+        LOG.info("Connection successful.")
 
-    # Use the provided connection to create the database
-    create_database_query = f"CREATE DATABASE IF NOT EXISTS {database_name};"
-    cursor = connection.cursor()
-    cursor.execute(create_database_query)
-    cursor.close()
-    connection.commit()
+        # Use the provided connection to create the database
+        create_database_query = f"CREATE DATABASE IF NOT EXISTS {database_name};"
+        LOG.info(f"Database creation query: {create_database_query}")
 
-    return connection
+        cursor = connection.cursor()
+        cursor.execute(create_database_query)
+        cursor.close()
+        connection.commit()
+        LOG.info("Database created successfully.")
+    except mysql.connector.Error as err:
+        LOG.error(f"Failed to create database: {err}")
+        raise
 
 
 def delete_database(connection):
-    # Extract the database name from the connection object
-    database_name = connection.database
+    try:
+        # Extract the database name from the connection object
+        database_name = connection.database
 
-    # Delete the database if it exists
-    delete_database_query = f"DROP DATABASE IF EXISTS {database_name};"
-    cursor = connection.cursor()
-    cursor.execute(delete_database_query)
-    cursor.close()
-    connection.commit()
+        # Delete the database if it exists
+        delete_database_query = f"DROP DATABASE IF EXISTS {database_name};"
+        LOG.info(f"Database deletion query: {delete_database_query}")
+
+        cursor = connection.cursor()
+        cursor.execute(delete_database_query)
+        cursor.close()
+        connection.commit()
+        LOG.info("Database deleted successfully.")
+    except mysql.connector.Error as err:
+        LOG.error(f"Failed to delete database: {err}")
+        raise
 
 
 def create_table(connection, table_name):
     # Create a new table if it does not exist yet
     create_table_query = f"""
     CREATE TABLE IF NOT EXISTS {table_name} (
-        ID VARCHAR(36) PRIMARY KEY,
-        Order INT,
-        Title VARCHAR(255),
-        Artist VARCHAR(255),
-        Genre VARCHAR(255),
-        BPM INT,
-        Key VARCHAR(5),
-        Rating FLOAT,
-        Bitrate INT,
-        Album_Artist VARCHAR(255),
-        Comments TEXT,
-        Date_Added DATE
+        id VARCHAR(36) PRIMARY KEY,
+        song_order INT,
+        title VARCHAR(255),
+        artist VARCHAR(255),
+        genre VARCHAR(255),
+        bpm INT,
+        key_song VARCHAR(5),
+        rating FLOAT,
+        bitrate INT,
+        album_artist VARCHAR(255),
+        comments TEXT,
+        date_added DATE
     );
     """
     cursor = connection.cursor()
@@ -71,7 +93,7 @@ def insert_data(connection, data_frame, table_name):
 
     # Insert data into the table
     insert_data_query = f"""
-    INSERT INTO {table_name} (ID, Order, Title, Artist, Genre, BPM, Key, Rating, Bitrate, Album_Artist, Comments, Date_Added)
+    INSERT INTO {table_name} (id, song_order, title, artist, genre, bpm, key_song, rating, bitrate, album_artist, comments, date_added)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
     cursor = connection.cursor()
