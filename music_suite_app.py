@@ -5,10 +5,13 @@ from PyQt5.QtGui import QFont, QColor, QPalette
 
 from src.stacks.music_performance import MusicPerformance
 from src.stacks.folder_manager import FolderManager
+from src.stacks.dj_rekordbox.dj_rekordbox_app import DjRekordboxWindow
 from src.log_config import setup_logger
-import config
+from config import config
 
-DEFAULT_DIRECTORY = config['directory']['default_folder']
+DEFAULT_DIRECTORY = config['directory']['ableton_projects']
+SETS_DIRECTORY = config['directory']['dj_sets']
+
 LOG = setup_logger()
 LOG.info(f"Default Folder: {DEFAULT_DIRECTORY}")
 
@@ -39,7 +42,7 @@ class MainWindow(QMainWindow):
         QApplication.setPalette(app_palette)
 
         # Set custom font for the title
-        title_font = QFont("Arial", 24, QFont.Bold)
+        QFont("Arial", 24, QFont.Bold)
 
         # Set the title font and style
         self.setStyleSheet("QMainWindow::title { font-family: 'Arial'; font-size: 24px; font-weight: bold; color: black; }")
@@ -64,12 +67,18 @@ class MainWindow(QMainWindow):
         btn_music_analysis.clicked.connect(self.open_music_analysis)
         btn_music_analysis.setStyleSheet("color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C;")
 
+        # Button for Dj/Rekordbox
+        btn_dj_rekordbox = QPushButton("Dj/Rekordbox", self)
+        btn_dj_rekordbox.clicked.connect(self.open_dj_rekordbox)
+        btn_dj_rekordbox.setStyleSheet("color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C;")
+
         # Window layout configuration
         layout = QGridLayout()
         layout.addWidget(btn_spotify, 0, 0)
         layout.addWidget(btn_music_performance, 0, 1)
         layout.addWidget(btn_folder_manager, 1, 0)
         layout.addWidget(btn_music_analysis, 1, 1)
+        layout.addWidget(btn_dj_rekordbox, 2, 0)
 
         central_widget = QWidget()
         central_widget.setLayout(layout)
@@ -111,6 +120,11 @@ class MainWindow(QMainWindow):
 
     def open_music_analysis(self):
         print("Music Analysis functionality")
+
+    def open_dj_rekordbox(self):
+        print("Dj/Rekordbox functionality")
+        self.dj_window = DjRekordboxWindow(SETS_DIRECTORY)
+        self.dj_window.show()
 
 
 if __name__ == "__main__":
