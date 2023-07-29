@@ -1,7 +1,8 @@
-import sys, logging
+import sys, logging, os
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
     QWidget, QPushButton, QFileDialog
 from PyQt5.QtGui import QFont, QColor, QPalette
+from PyQt5.QtCore import Qt
 
 LOG = logging.getLogger()
 LOG.setLevel("INFO")
@@ -36,36 +37,31 @@ class DjRekordboxWindow(QMainWindow):
         self.selected_directory = directory
 
     def save_dj_set(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
+        # Get a list of all files in the selected directory
+        files = os.listdir(self.selected_directory)
 
-        # Configuración del estilo para los botones
-        style_sheet = "QPushButton { color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C; }"
+        for file_name in files:
+            file_path = os.path.join(self.selected_directory, file_name)
 
-        file_name, _ = QFileDialog.getSaveFileName(self, "Save DJ Set", self.selected_directory,
-                                                   "Text Files (*.txt);;All Files (*)",
-                                                   options=options)
+            # Implement functionality to process each file here
+            LOG.info("Processing file:", file_path)
 
-        if file_name:
-            # Implement functionality to save DJ Set here using the selected file_name
-            print("Saving DJ Set to:", file_name)
-
-        # Close the DjRekordboxWindow after saving the DJ Set
+        # Close the Dj/Rekordbox Window after processing the files
         self.close()
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    # Configuración del tema de la aplicación
+    # Application theme configuration
     app_palette = QPalette()
     app_palette.setColor(QPalette.Window, QColor(53, 53, 53))
-    app_palette.setColor(QPalette.WindowText, Qt.white)
+    app_palette.setColor(QPalette.WindowText, QColor(Qt.white))
     app_palette.setColor(QPalette.Base, QColor(25, 25, 25))
-    # Agrega más configuraciones de colores según sea necesario
+    # Add more color configurations as needed
     app.setPalette(app_palette)
 
-    # Cargar una fuente personalizada si se desea
+    # Load a custom font if desired
     app_font = QFont("Arial", 10)
     app.setFont(app_font)
 
