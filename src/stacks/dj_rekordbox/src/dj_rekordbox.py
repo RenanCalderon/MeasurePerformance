@@ -1,12 +1,30 @@
 import csv, logging
 import pandas as pd
-import uuid
 import hashlib
 from src.stacks.dj_rekordbox.src import camelot_circle
 from src.stacks.dj_rekordbox.src.config_dj_rk import expected_column_names
 
 LOG = logging.getLogger()
 LOG.setLevel("INFO")
+
+
+def assign_rating_reference(rating_str):
+    num_asterisks = rating_str.count('*')
+
+    if num_asterisks == 0:
+        return 0
+    elif num_asterisks == 1:
+        return 1
+    elif num_asterisks == 2:
+        return 2
+    elif num_asterisks == 3:
+        return 3
+    elif num_asterisks == 4:
+        return 4
+    elif num_asterisks == 5:
+        return 5
+    else:
+        return None
 
 
 def read_file_to_dataframe(file_path):
@@ -56,6 +74,8 @@ def read_file_to_dataframe(file_path):
         # Drop the "Combined" column if not needed
         df.drop(columns=["Combined"], inplace=True)
 
+        df["rating"] = df["rating"].apply(assign_rating_reference)
+
         LOG.info("DataFrame successfully generated.")
         return df
 
@@ -66,3 +86,7 @@ def read_file_to_dataframe(file_path):
     except Exception as e:
         LOG.error(f"An error occurred while reading the file: {file_path}")
         raise e
+
+
+def load_db():
+    pass
