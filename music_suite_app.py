@@ -13,7 +13,6 @@ DEFAULT_DIRECTORY = config['directory']['ableton_projects']
 SETS_DIRECTORY = config['directory']['dj_sets']
 
 LOG = setup_logger()
-LOG.info(f"Default Folder: {DEFAULT_DIRECTORY}")
 
 
 class MainWindow(QMainWindow):
@@ -132,4 +131,5 @@ if __name__ == "__main__":
 
     window = MainWindow()
     window.show()
+    LOG.info("Music Suite APP Initiated")
     sys.exit(app.exec_())
