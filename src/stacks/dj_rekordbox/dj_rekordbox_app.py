@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
     QWidget, QPushButton, QFileDialog
 from PyQt5.QtGui import QFont, QColor, QPalette
 from PyQt5.QtCore import Qt
+from src.stacks.dj_rekordbox.src.dj_rekordbox import read_file_to_dataframe
 
 LOG = logging.getLogger()
 LOG.setLevel("INFO")
@@ -39,12 +40,15 @@ class DjRekordboxWindow(QMainWindow):
     def save_dj_set(self):
         # Get a list of all files in the selected directory
         files = os.listdir(self.selected_directory)
+        # LOG.info(f"Directory: {self.selected_directory}")
 
         for file_name in files:
             file_path = os.path.join(self.selected_directory, file_name)
 
             # Implement functionality to process each file here
-            LOG.info("Processing file:", file_path)
+            LOG.info(f"Processing file: {file_path}")
+            df = read_file_to_dataframe(file_path)
+            LOG.info(f"DataFrame: {df}")
 
         # Close the Dj/Rekordbox Window after processing the files
         self.close()

@@ -1,64 +1,68 @@
-import csv
+import csv, logging
 import pandas as pd
 import uuid
+import hashlib
 from src.stacks.dj_rekordbox.src import camelot_circle
-from config_dj_rk import config
+from src.stacks.dj_rekordbox.src.config_dj_rk import expected_column_names
 
-input_folder = config["directory"]["input_folder"]
-output_folder = config["directory"]["output_folder"]
-
-# Variable se obtiene del usuario
-file_name = 'Organic_House.txt'
-file = input_folder + file_name
+LOG = logging.getLogger()
+LOG.setLevel("INFO")
 
 
-def read_csv_to_dataframe(file_path, file_output=False):
+def read_file_to_dataframe(file_path):
     """
-    Read a CSV file with utf-16 encoding, construct a DataFrame, and use the first row as column titles.
+    Read a file with utf-16 encoding, construct a DataFrame, and use the first row as column titles.
 
     Args:
         file_path (str): Path of the CSV file.
-        file_output (bool): Flag to indicate whether to save the DataFrame to a file.
 
     Returns:
-        pandas.DataFrame: DataFrame containing the data from the CSV file.
+        pandas.DataFrame: DataFrame containing the data from the file.
     """
-    with open(file_path, 'r', encoding='utf-16') as archivo:
-        lector = csv.reader(archivo, delimiter='\t')
-        data = [fila for fila in lector]
+    try:
+        with open(file_path, 'r', encoding='utf-16') as archivo:
+            lector = csv.reader(archivo, delimiter='\t')
+            data = [fila for fila in lector]
 
-    # Extract the titles from the first row
-    titles = data[0]
+        # Extract the titles from the first row
+        titles = data[0]
 
-    # Convert the rest of the data into a DataFrame
-    df_data = data[1:]  # Exclude the first row as it contains titles
-    df = pd.DataFrame(df_data, columns=titles)
-    column_mapping = {
-        "#": "Order",
-        "Título de la pista": "Title",
-        "Artista": "Artist",
-        "Género": "Genre",
-        "BPM": "BPM",
-        "Tonalidad": "Key",
-        "Puntuación": "Rating",
-        "Velocidad de bits": "Bitrate",
-        "Artista del álbum": "Album_Artist",
-        "Comentarios": "Comments",
-        "Fecha añadida": "Date_Added",
-    }
+        # Check if the column names match the expected ones
+        mismatched_columns = [col for col in expected_column_names if col not in titles]
 
-    df = df.rename(columns=column_mapping)
-    camelot_circle.add_camelot_key_column(df, df["Key"])
+        if mismatched_columns:
+            LOG.warning(f"The file {file_path} has different column names. Missing columns: {mismatched_columns}")
 
-    # Generate the ID column using UUID
-    df["ID"] = [str(uuid.uuid4()) for _ in range(len(df))]
+        # Convert the rest of the data into a DataFrame
+        df_data = data[1:]  # Exclude the first row as it contains titles
+        df = pd.DataFrame(df_data, columns=titles)
 
-    if file_output:
-        output_file_path = output_folder + file_name
-        df.to_csv(output_file_path, index=False, sep='\t', encoding='utf-16')
+        # Remove the 'Artwork' column from the DataFrame
+        if 'Artwork' in df.columns:
+            df.drop('Artwork', axis=1, inplace=True)
 
-    return df
+        # Rename columns using the mapping dictionary
+        df.rename(columns=expected_column_names, inplace=True)
 
+        # Add camelot circle column
+        camelot_circle.add_camelot_key_column(df, df["key_song"])
 
-df = read_csv_to_dataframe(file, file_output=True)
-print(df)
+        # Combine the values of the desired columns into a single string
+        df["Combined"] = df["name"] + df["artist"] + df["genre"] + df["remix"] + df["key_song"] + df["bpm"]
+
+        # Apply a hash function (SHA-256) to generate the ID
+        df["id"] = df["Combined"].apply(lambda x: hashlib.sha256(x.encode()).hexdigest())
+
+        # Drop the "Combined" column if not needed
+        df.drop(columns=["Combined"], inplace=True)
+
+        LOG.info("DataFrame successfully generated.")
+        return df
+
+    except FileNotFoundError as e:
+        LOG.error(f"File not found: {file_path}")
+        raise e
+
+    except Exception as e:
+        LOG.error(f"An error occurred while reading the file: {file_path}")
+        raise e
