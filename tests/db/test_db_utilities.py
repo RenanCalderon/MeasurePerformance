@@ -46,18 +46,20 @@ def test_create_table(connection):
 def test_insert_data(connection):
     table_name = "your_table_test"  # Test table name
     data = {
-        "ID": ["id1", "id2"],
-        "Order": [1, 2],
-        "Title": ["Song 1", "Song 2"],
-        "Artist": ["Artist 1", "Artist 2"],
-        "Genre": ["Genre 1", "Genre 2"],
-        "BPM": [120, 130],
-        "Key": ["C", "D"],
-        "Rating": [4.5, 3.8],
-        "Bitrate": [320, 256],
-        "Album_Artist": ["Album Artist 1", "Album Artist 2"],
-        "Comments": ["Comment 1", "Comment 2"],
-        "Date_Added": ["2023-07-24", "2023-07-25"]
+        "id": ["id1", "id2"],
+        "song_order": [1, 2],
+        "name": ["Song 1", "Song 2"],
+        "artist": ["Artist 1", "Artist 2"],
+        "remix": ["Remix 1", "Remix 2"],
+        "genre": ["Genre 1", "Genre 2"],
+        "key_song": ["C", "D"],
+        "bpm": [120, 130],
+        "label": ["Label 1", "Label 2"],
+        "time": ["12:22", "13:30"],  # Corrected Time format
+        "remixer": ["Sigmahz", "Sigmahz"],
+        "album": ["Album 1", "Album 2"],
+        "rating": [4.5, 3.8],
+        "date_added": ["2023-07-24", "2023-07-25"]
     }
 
     df = pd.DataFrame(data)
@@ -66,7 +68,7 @@ def test_insert_data(connection):
     cursor = connection.cursor()
     cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
     result = cursor.fetchone()
-    assert result[0] == len(data["ID"])
+    assert result[0] == len(data["id"])
     cursor.close()
 
 
