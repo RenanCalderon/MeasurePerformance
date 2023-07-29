@@ -7,7 +7,7 @@ def add_camelot_key_column(df, field):
         camelot_key = get_camelot_key_from_tonality(tonality)
         camelot_keys.append(camelot_key)
 
-    df["Camelot"] = camelot_keys
+    df["camelot"] = camelot_keys
 
 
 def get_camelot_key_from_tonality(tonality):
