@@ -4,9 +4,16 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
 from PyQt5.QtGui import QFont, QColor, QPalette
 from PyQt5.QtCore import Qt
 from src.stacks.dj_rekordbox.src.dj_rekordbox import read_file_to_dataframe
+from db.utilities_db import create_connection, insert_data
+from db.config_db import config, column_orders
 
 LOG = logging.getLogger()
 LOG.setLevel("INFO")
+
+DATABASE_NAME = "music_suite"
+HOST = config["database"]["mysql_host"]
+USER = config["database"]["mysql_user"]
+PASSWORD = config["database"]["mysql_password"]
 
 
 class DjRekordboxWindow(QMainWindow):
@@ -48,7 +55,12 @@ class DjRekordboxWindow(QMainWindow):
             # Implement functionality to process each file here
             LOG.info(f"Processing file: {file_path}")
             df = read_file_to_dataframe(file_path)
+            df = df.reindex(columns=column_orders)
             LOG.info(f"DataFrame: {df}")
+
+            # Load into the DB Music Suite
+            connection = create_connection(HOST, USER, PASSWORD, DATABASE_NAME)
+            insert_data(connection, df, "songs")
 
         # Close the Dj/Rekordbox Window after processing the files
         self.close()
