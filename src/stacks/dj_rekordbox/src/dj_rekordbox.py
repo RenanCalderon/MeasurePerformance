@@ -86,7 +86,3 @@ def read_file_to_dataframe(file_path):
     except Exception as e:
         LOG.error(f"An error occurred while reading the file: {file_path}")
         raise e
-
-
-def load_db():
-    pass
