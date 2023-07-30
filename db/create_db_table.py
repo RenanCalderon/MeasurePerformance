@@ -1,7 +1,7 @@
 import sys, logging
 sys.path.append(r'C:\Users\renan\Documents\Python\MusicSuite')
 
-import utilities_db
+from utilities_db import create_database, create_connection, create_table
 from config_db import config
 
 LOG = logging.getLogger()
@@ -18,13 +18,13 @@ def create_db_table():
 
     try:
         # Create the database
-        utilities_db.create_database(host, user, password, database_name)
+        create_database(host, user, password, database_name)
 
         # Connect to the database
-        connection = utilities_db.create_connection(host, user, password, database_name)
+        connection = create_connection(host, user, password, database_name)
 
         # Create the table
-        utilities_db.create_table(connection, table_name)
+        create_table(connection, table_name)
         connection.close()
 
         print(f"Table '{table_name}' created in database '{database_name}'.")
