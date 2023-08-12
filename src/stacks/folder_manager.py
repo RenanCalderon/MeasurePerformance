@@ -68,6 +68,7 @@ class FolderManager:
         if als_files:
             return max(als_files, key=os.path.getctime)
         else:
+            print("No ALS files found")
             return None
 
     def rename_als_files(self):
