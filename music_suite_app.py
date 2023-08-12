@@ -6,6 +6,7 @@ from PyQt5.QtGui import QFont, QColor, QPalette
 from src.stacks.music_performance import MusicPerformance
 from src.stacks.folder_manager import FolderManager
 from src.stacks.dj_rekordbox.dj_rekordbox_app import DjRekordboxWindow
+from src.stacks.ableton.ableton_app import AbletonWindow
 from src.log_config import setup_logger
 from config import config
 
@@ -71,6 +72,11 @@ class MainWindow(QMainWindow):
         btn_dj_rekordbox.clicked.connect(self.open_dj_rekordbox)
         btn_dj_rekordbox.setStyleSheet("color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C;")
 
+        # Button for Ableton
+        btn_ableton = QPushButton("Ableton", self)
+        btn_ableton.clicked.connect(self.open_ableton)
+        btn_ableton.setStyleSheet("color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C;")
+
         # Window layout configuration
         layout = QGridLayout()
         layout.addWidget(btn_spotify, 0, 0)
@@ -78,6 +84,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(btn_folder_manager, 1, 0)
         layout.addWidget(btn_music_analysis, 1, 1)
         layout.addWidget(btn_dj_rekordbox, 2, 0)
+        layout.addWidget(btn_ableton, 2, 1)
 
         central_widget = QWidget()
         central_widget.setLayout(layout)
@@ -111,7 +118,7 @@ class MainWindow(QMainWindow):
 
     def open_folder_manager(self):
         print("Folder Manager functionality")
-        # options = ["Rename file"] # Line for different functionalities
+        # Rename File
         folder_selected = QFileDialog.getExistingDirectory(self, "Select Folder", DEFAULT_DIRECTORY)
         if folder_selected:
             folder_manager = FolderManager(folder_selected)
@@ -124,6 +131,11 @@ class MainWindow(QMainWindow):
         print("Dj/Rekordbox functionality")
         self.dj_window = DjRekordboxWindow(SETS_DIRECTORY)
         self.dj_window.show()
+
+    def open_ableton(self):
+        print("Ableton functionality")
+        self.ableton_window = AbletonWindow(DEFAULT_DIRECTORY)
+        self.ableton_window.show()
 
 
 if __name__ == "__main__":
