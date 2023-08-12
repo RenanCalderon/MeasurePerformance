@@ -16,3 +16,11 @@ To be defined
 
 ## Spotify
 To be defined
+
+## Dj/Rekordbox
+Section to manage dj sets and save it in a database
+  - Save Dj set (save_dj_set)
+
+## Ableton
+Project for management of Ableton projects
+  - Open ableton project
