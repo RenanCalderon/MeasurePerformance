@@ -1,7 +1,6 @@
 import sys, logging, subprocess
 from src.stacks.ableton.src.ableton_utilities import get_latest_als_file
 from src.stacks.ableton.src.config_abl import config
-# import select_project
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
     QWidget, QPushButton, QFileDialog, QMessageBox, QListWidget
 from PyQt5.QtGui import QFont, QColor, QPalette
@@ -71,9 +70,9 @@ class AbletonWindow(QMainWindow):
         # Apply styles to the list widget
         list_widget.setStyleSheet("""
                 QListWidget {
-                    background-color: #FFFFFF;
-                    color: #000000;
-                    border: 1px solid #000000;
+                    background-color: #000000;
+                    color: #FFFFFF;
+                    border: 1px solid #FFFFFF;
                     font-size: 14px;
                 }
                 QListWidget::item {
@@ -87,8 +86,18 @@ class AbletonWindow(QMainWindow):
 
         dialog.layout().addWidget(list_widget)
 
-        ok_button = dialog.addButton("Open Selected Project", QMessageBox.AcceptRole)
+        ok_button = dialog.addButton("Open", QMessageBox.AcceptRole)
         cancel_button = dialog.addButton(QMessageBox.Cancel)
+
+        # Apply styles to the buttons
+        ok_button.setStyleSheet("""
+                    color: #000000;
+                    font-size: 14px;
+                """)
+        cancel_button.setStyleSheet("""
+                    color: #000000;
+                    font-size: 14px;
+                """)
 
         dialog.exec_()
 
