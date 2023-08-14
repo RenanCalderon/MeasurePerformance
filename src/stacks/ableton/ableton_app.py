@@ -2,7 +2,7 @@ import sys, logging, subprocess
 from src.stacks.ableton.src.ableton_utilities import get_latest_als_file
 from src.stacks.ableton.src.config_abl import config
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
-    QWidget, QPushButton, QFileDialog, QMessageBox, QListWidget
+    QWidget, QPushButton, QFileDialog, QMessageBox, QListWidget, QVBoxLayout, QHBoxLayout, QLabel
 from PyQt5.QtGui import QFont, QColor, QPalette
 from PyQt5.QtCore import Qt
 
@@ -62,10 +62,15 @@ class AbletonWindow(QMainWindow):
     def select_project_dialog(self, files):
         dialog = QMessageBox(self)
         dialog.setWindowTitle("Select Project")
-        dialog.setText("Multiple projects found with the same date. Please select a project:")
+        dialog.setText(" ")
+
+        # Remove default label and create a custom QLabel
+        label = QLabel("Multiple projects found with the same date. Please select a project:")
+        label.setAlignment(Qt.AlignCenter)  # Center-align the label
+        label.setStyleSheet("color: black; font-weight: bold;")  # Customize label style
+        dialog.layout().addWidget(label)
 
         list_widget = QListWidget()
-        list_widget.addItems(files)
 
         # Apply styles to the list widget
         list_widget.setStyleSheet("""
@@ -76,7 +81,7 @@ class AbletonWindow(QMainWindow):
                     font-size: 14px;
                 }
                 QListWidget::item {
-                    padding: 5px;
+                    padding: 10px;
                 }
                 QListWidget::item:selected {
                     background-color: #2C2C2C;
@@ -85,6 +90,7 @@ class AbletonWindow(QMainWindow):
             """)
 
         dialog.layout().addWidget(list_widget)
+        list_widget.addItems(files)
 
         ok_button = dialog.addButton("Open", QMessageBox.AcceptRole)
         cancel_button = dialog.addButton(QMessageBox.Cancel)
@@ -98,6 +104,18 @@ class AbletonWindow(QMainWindow):
                     color: #000000;
                     font-size: 14px;
                 """)
+
+        dialog.setLayout(QVBoxLayout())  # Set the layout to QVBoxLayout
+        dialog.layout().addWidget(list_widget)  # Add the list widget to the layout
+
+        # Create a container for the buttons with a QHBoxLayout
+        buttons_container = QWidget()
+        buttons_layout = QHBoxLayout()
+        buttons_layout.addWidget(cancel_button)
+        buttons_layout.addWidget(ok_button)
+        buttons_layout.setAlignment(Qt.AlignRight)  # Align buttons to the right
+        buttons_container.setLayout(buttons_layout)
+        dialog.layout().addWidget(buttons_container)
 
         dialog.exec_()
 
