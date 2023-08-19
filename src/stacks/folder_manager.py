@@ -1,7 +1,10 @@
-import os
+import os, logging
 import glob
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QLineEdit, QLabel, QPushButton, QVBoxLayout
 from PyQt5.QtCore import Qt
+
+LOG = logging.getLogger()
+LOG.info("INFO")
 
 
 class RenameALSDialog(QDialog):
@@ -28,7 +31,7 @@ class RenameALSDialog(QDialog):
         layout.addWidget(label_key)
         layout.addWidget(self.key_edit)
 
-        label_stage = QLabel("Stage:")
+        label_stage = QLabel("Stage (Not required for changing name):")
         self.stage_edit = QLineEdit()
         self.stage_edit.setStyleSheet("color: black;")  # Set text color to black
         layout.addWidget(label_stage)
@@ -63,6 +66,8 @@ class FolderManager:
     def __init__(self, working_directory):
         self.working_directory = working_directory
 
+        LOG.info(f"Working Diectory: {self.working_directory}")
+
     def get_latest_als_file(self):
         als_files = glob.glob(os.path.join(self.working_directory, "*.als"))
         if als_files:
@@ -71,17 +76,35 @@ class FolderManager:
             print("No ALS files found")
             return None
 
+    def parse_als_project(self, project):
+        values = project.split(".")[0].split("_")
+        name = values[0]
+        key = values[1]
+        stage = values[2]
+        date = values[3]
+
+        return name, key, stage, date
+
     def rename_als_files(self):
         latest_als_file = self.get_latest_als_file()
         if latest_als_file:
             # Get the current ALS file name without the full path
             current_name = os.path.basename(latest_als_file)
+            LOG.info(f"Current Ableton Project Name: {current_name}")
+
+            name, key, _, _ = self.parse_als_project(current_name)
 
             # Show the custom dialog with the current ALS file name
             dialog = RenameALSDialog(current_name)
             if dialog.exec_():
                 # Get the new name, key, and stage from the dialog
-                name, key, stage = dialog.get_user_input()
+                input_name, input_key, input_stage = dialog.get_user_input()
+
+                if input_name != "":
+                    name = input_name
+
+                if input_key != "":
+                    key = input_key
 
                 # Rename the folder with the Name and Key
                 new_folder_name = f"{name}_{key} Project"
@@ -98,7 +121,10 @@ class FolderManager:
                         old_file_path = os.path.join(self.working_directory, file)
 
                         # Extract the date part from the current name (separated by "_")
-                        date_part = file.split("_")[-1].replace(".als", "")
+                        _, _, stage, date_part = self.parse_als_project(file)
+
+                        if input_stage != "":
+                            stage = input_stage
 
                         # Create the new file name with the parameters and the original date
                         new_file_name = f"{name}_{key}_{stage}_{date_part}.als"
