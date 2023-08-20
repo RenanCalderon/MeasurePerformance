@@ -1,4 +1,4 @@
-import sys, logging, subprocess
+import sys, logging, subprocess, traceback
 from src.stacks.ableton.src.ableton_utilities import get_latest_als_file
 from config.config import config
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
@@ -8,7 +8,6 @@ from PyQt5.QtCore import Qt
 
 LOG = logging.getLogger()
 LOG.setLevel("INFO")
-
 ABLETON_PATH = config.get("ableton_config").get("exe_path")
 
 
@@ -131,20 +130,26 @@ class AbletonWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    try:
+        app = QApplication(sys.argv)
 
-    # Application theme configuration
-    app_palette = QPalette()
-    app_palette.setColor(QPalette.Window, QColor(53, 53, 53))
-    app_palette.setColor(QPalette.WindowText, QColor(Qt.white))
-    app_palette.setColor(QPalette.Base, QColor(25, 25, 25))
-    # Add more color configurations as needed
-    app.setPalette(app_palette)
+        # Application theme configuration
+        app_palette = QPalette()
+        app_palette.setColor(QPalette.Window, QColor(53, 53, 53))
+        app_palette.setColor(QPalette.WindowText, QColor(Qt.white))
+        app_palette.setColor(QPalette.Base, QColor(25, 25, 25))
+        # Add more color configurations as needed
+        app.setPalette(app_palette)
 
-    # Load a custom font if desired
-    app_font = QFont("Arial", 10)
-    app.setFont(app_font)
+        # Load a custom font if desired
+        app_font = QFont("Arial", 10)
+        app.setFont(app_font)
 
-    window = AbletonWindow()
-    window.show()
-    sys.exit(app.exec_())
+        window = AbletonWindow()
+        window.show()
+        LOG.info("Ableton functionality executed successfully")
+        sys.exit(app.exec_())
+
+    except Exception as e:
+        LOG.error("Error executing Ableton functionality")
+        traceback.print_exc()
