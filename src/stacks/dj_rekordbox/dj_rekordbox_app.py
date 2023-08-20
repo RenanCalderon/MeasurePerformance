@@ -1,16 +1,18 @@
 import sys, logging, os
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
-    QWidget, QPushButton, QFileDialog
+    QWidget, QPushButton
 from PyQt5.QtGui import QFont, QColor, QPalette
 from PyQt5.QtCore import Qt
 from src.stacks.dj_rekordbox.src.dj_rekordbox import read_file_to_dataframe
 from db.utilities_db import create_connection, insert_data
-from db.config_db import config, column_orders
+from db.config_db import column_orders
+from config.config import config
 
 LOG = logging.getLogger()
 LOG.setLevel("INFO")
 
-DATABASE_NAME = "music_suite"
+ENVIRONMENT = config.get('environment')
+DATABASE_NAME = config["database"]["mysql_database"]
 HOST = config["database"]["mysql_host"]
 USER = config["database"]["mysql_user"]
 PASSWORD = config["database"]["mysql_password"]
@@ -23,6 +25,7 @@ class DjRekordboxWindow(QMainWindow):
         # Window configuration
         self.setWindowTitle("Dj/Rekordbox Functionality")
         self.setGeometry(100, 100, 300, 200)
+        LOG.info(f"Environment: {ENVIRONMENT}")
 
         # Create a central widget for the window
         central_widget = QWidget()
