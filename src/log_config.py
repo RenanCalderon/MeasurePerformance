@@ -1,19 +1,29 @@
 import logging
+from logging.handlers import RotatingFileHandler
 
 
-def setup_logger():
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
+def setup_logger(log_file):
+    # Create a logger
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
 
-    # Create a logging handler for console output
+    # Create a handler to write to a rotating file
+    file_handler = RotatingFileHandler(log_file, maxBytes=1024 * 1024, backupCount=3)
+    file_handler.setLevel(logging.DEBUG)
+
+    # Create a handler to display logs on the console
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)
 
-    # Configure the message format
-    formatter = logging.Formatter('%(levelname)s: %(message)s')
+    # Create a format for the logs
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
+    # Apply the format to the handlers
+    file_handler.setFormatter(formatter)
     console_handler.setFormatter(formatter)
 
-    # Add the logging handler to the logger instance
+    # Add the handlers to the logger
+    logger.addHandler(file_handler)
     logger.addHandler(console_handler)
 
     return logger

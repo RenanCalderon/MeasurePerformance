@@ -1,4 +1,4 @@
-import sys
+import sys, traceback, os
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QWidget, QPushButton, QFileDialog, QLineEdit
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QColor, QPalette
@@ -8,12 +8,19 @@ from src.stacks.folder_manager import FolderManager
 from src.stacks.dj_rekordbox.dj_rekordbox_app import DjRekordboxWindow
 from src.stacks.ableton.ableton_app import AbletonWindow
 from src.log_config import setup_logger
-from config import config
+from config.config import config
 
-DEFAULT_DIRECTORY = config['directory']['ableton_projects']
-SETS_DIRECTORY = config['directory']['dj_sets']
+ENVIRONMENT = config.get('environment')
+ABLETON_DIRECTORY = config.get('directory').get('ableton_projects')
+SETS_DIRECTORY = config.get('directory').get('dj_sets')
 
-LOG = setup_logger()
+log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app.log')
+LOG = setup_logger(log_file)
+os.environ['LOG'] = log_file
+
+LOG.info(f"Environment: {ENVIRONMENT}")
+LOG.info(f"Ableton Directory: {ABLETON_DIRECTORY}")
+LOG.info(f"Sets Directory: {SETS_DIRECTORY}")
 
 
 class MainWindow(QMainWindow):
@@ -21,7 +28,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Main window configuration
-        self.setWindowTitle("Music Suite")
+        self.setWindowTitle(f"Music {ENVIRONMENT}")
         self.setGeometry(100, 100, 800, 600)
 
         # Set dark application theme
@@ -110,7 +117,7 @@ class MainWindow(QMainWindow):
         print("Spotify functionality")
 
     def open_music_performance(self):
-        folder_selected = QFileDialog.getExistingDirectory(self, "Select Folder", DEFAULT_DIRECTORY)
+        folder_selected = QFileDialog.getExistingDirectory(self, "Select Folder", ABLETON_DIRECTORY)
         if folder_selected:
             folder_edit = QLineEdit(folder_selected)
             music_performance = MusicPerformance(folder_edit)
@@ -119,7 +126,7 @@ class MainWindow(QMainWindow):
     def open_folder_manager(self):
         print("Folder Manager functionality")
         # Rename File
-        folder_selected = QFileDialog.getExistingDirectory(self, "Select Folder", DEFAULT_DIRECTORY)
+        folder_selected = QFileDialog.getExistingDirectory(self, "Select Folder", ABLETON_DIRECTORY)
         if folder_selected:
             folder_manager = FolderManager(folder_selected)
             folder_manager.rename_als_files()
@@ -134,14 +141,17 @@ class MainWindow(QMainWindow):
 
     def open_ableton(self):
         print("Ableton functionality")
-        self.ableton_window = AbletonWindow(DEFAULT_DIRECTORY)
+        self.ableton_window = AbletonWindow(ABLETON_DIRECTORY)
         self.ableton_window.show()
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    try:
+        app = QApplication(sys.argv)
 
-    window = MainWindow()
-    window.show()
-    LOG.info("Music Suite APP Initiated")
-    sys.exit(app.exec_())
+        window = MainWindow()
+        window.show()
+        LOG.info(f"Music Suite APP Initiated")
+        app.exec_()
+    except Exception as e:
+        traceback.print_exc()
