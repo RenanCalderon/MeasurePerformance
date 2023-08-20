@@ -1,6 +1,6 @@
 import sys, logging, subprocess
 from src.stacks.ableton.src.ableton_utilities import get_latest_als_file
-from src.stacks.ableton.src.config_abl import config
+from config.config import config
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
     QWidget, QPushButton, QFileDialog, QMessageBox, QListWidget, QVBoxLayout, QHBoxLayout, QLabel
 from PyQt5.QtGui import QFont, QColor, QPalette
@@ -9,7 +9,7 @@ from PyQt5.QtCore import Qt
 LOG = logging.getLogger()
 LOG.setLevel("INFO")
 
-ABLETON_PATH = config["exe_path"]
+ABLETON_PATH = config.get("ableton_config").get("exe_path")
 
 
 class AbletonWindow(QMainWindow):
@@ -49,15 +49,16 @@ class AbletonWindow(QMainWindow):
 
         latest_files = get_latest_als_file(project)
 
-        if len(latest_files) > 1:
-            # If more than one project has the same date
-            self.select_project_dialog(latest_files)
+        if latest_files:
+            if len(latest_files) > 1:
+                # If more than one project has the same date
+                self.select_project_dialog(latest_files)
 
-        else:
-            try:
-                subprocess.run([ABLETON_PATH, latest_files[0]])
-            except OSError as e:
-                print("Error:", e)
+            else:
+                try:
+                    subprocess.run([ABLETON_PATH, latest_files[0]])
+                except OSError as e:
+                    print("Error:", e)
 
     def select_project_dialog(self, files):
         dialog = QMessageBox(self)
