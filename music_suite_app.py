@@ -14,7 +14,10 @@ ENVIRONMENT = config.get('environment')
 ABLETON_DIRECTORY = config.get('directory').get('ableton_projects')
 SETS_DIRECTORY = config.get('directory').get('dj_sets')
 
-LOG = setup_logger()
+log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app.log')
+LOG = setup_logger(log_file)
+os.environ['LOG'] = log_file
+
 LOG.info(f"Environment: {ENVIRONMENT}")
 LOG.info(f"Ableton Directory: {ABLETON_DIRECTORY}")
 LOG.info(f"Sets Directory: {SETS_DIRECTORY}")
