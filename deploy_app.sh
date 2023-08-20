@@ -33,12 +33,9 @@ python -m venv "$VENV_DIR"
 source "$VENV_DIR/bin/activate"
 echo "Virtual environment activated '$VENV_DIR' "
 
+echo "Installing deployment packages"
 pip install -e git+https://github.com/RenanCalderon/Configurations.git@"$APP_TYPE"#egg="$APP_TYPE"
-
-echo "Installing pyinstaller"
 pip install pyinstaller
-
-echo "Installing packages"
 pip install -r "$PROJECT_DIR/requirements.txt"
 
 echo "Deploying App"
@@ -51,5 +48,6 @@ python -m venv "$VENV_DIR"
 source "$VENV_DIR/bin/activate"
 echo "Virtual environment activated '$VENV_DIR' "
 
+echo "Installing updated test environment packages"
 pip install -e git+https://github.com/RenanCalderon/Configurations.git@test#egg=test
 pip install -r "$PROJECT_DIR/requirements.txt"
