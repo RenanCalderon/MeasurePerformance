@@ -57,32 +57,32 @@ class MainWindow(QMainWindow):
         # Button for Spotify
         btn_spotify = QPushButton("Spotify", self)
         btn_spotify.clicked.connect(self.open_spotify)
-        btn_spotify.setStyleSheet("color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C;")
+        btn_spotify.setStyleSheet("color: white; font-weight: bold; font-size: 18px; background-color: #2C2C2C;")
 
         # Button for Music Performance
         btn_music_performance = QPushButton("Music Performance", self)
         btn_music_performance.clicked.connect(self.open_music_performance)
-        btn_music_performance.setStyleSheet("color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C;")
+        btn_music_performance.setStyleSheet("color: white; font-weight: bold; font-size: 18px; background-color: #2C2C2C;")
 
         # Button for Folder Manager
         btn_folder_manager = QPushButton("Folder Manager", self)
         btn_folder_manager.clicked.connect(self.open_folder_manager)
-        btn_folder_manager.setStyleSheet("color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C;")
+        btn_folder_manager.setStyleSheet("color: white; font-weight: bold; font-size: 18px; background-color: #2C2C2C;")
 
         # Button for Music Analysis
         btn_music_analysis = QPushButton("Music Analysis", self)
         btn_music_analysis.clicked.connect(self.open_music_analysis)
-        btn_music_analysis.setStyleSheet("color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C;")
+        btn_music_analysis.setStyleSheet("color: white; font-weight: bold; font-size: 18px; background-color: #2C2C2C;")
 
         # Button for Dj/Rekordbox
         btn_dj_rekordbox = QPushButton("Dj/Rekordbox", self)
         btn_dj_rekordbox.clicked.connect(self.open_dj_rekordbox)
-        btn_dj_rekordbox.setStyleSheet("color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C;")
+        btn_dj_rekordbox.setStyleSheet("color: white; font-weight: bold; font-size: 18px; background-color: #2C2C2C;")
 
         # Button for Ableton
         btn_ableton = QPushButton("Ableton", self)
         btn_ableton.clicked.connect(self.open_ableton)
-        btn_ableton.setStyleSheet("color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C;")
+        btn_ableton.setStyleSheet("color: white; font-weight: bold; font-size: 18px; background-color: #2C2C2C;")
 
         # Window layout configuration
         layout = QGridLayout()
