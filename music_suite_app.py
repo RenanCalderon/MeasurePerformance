@@ -8,7 +8,7 @@ from src.stacks.folder_manager import FolderManager
 from src.stacks.dj_rekordbox.dj_rekordbox_app import DjRekordboxWindow
 from src.stacks.ableton.ableton_app import AbletonWindow
 from src.log_config import setup_logger
-from config.config import config
+from config import config
 
 ENVIRONMENT = config.get('environment')
 ABLETON_DIRECTORY = config.get('directory').get('ableton_projects')
