@@ -1,8 +1,10 @@
-import logging
+import logging, os
 from logging.handlers import RotatingFileHandler
 
+log_file = os.path.join(r"C:\Users\renan\Documents\Python\MusicSuite", 'app.log')
 
-def setup_logger(log_file):
+
+def setup_logger():
     # Create a logger
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
