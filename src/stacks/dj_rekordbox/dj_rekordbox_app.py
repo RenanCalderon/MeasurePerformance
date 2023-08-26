@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt
 from src.stacks.dj_rekordbox.src.dj_rekordbox import read_file_to_dataframe
 from db.utilities_db import create_connection, insert_data
 from db.config_db import column_orders
-from config.config import config
+from config import config
 
 LOG = logging.getLogger()
 LOG.setLevel("INFO")
