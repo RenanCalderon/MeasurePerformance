@@ -1,6 +1,6 @@
 import sys, logging, subprocess, traceback
 from src.stacks.ableton.src.ableton_utilities import get_latest_als_file
-from config.config import config
+from config import config
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
     QWidget, QPushButton, QFileDialog, QMessageBox, QListWidget, QVBoxLayout, QHBoxLayout, QLabel
 from PyQt5.QtGui import QFont, QColor, QPalette
