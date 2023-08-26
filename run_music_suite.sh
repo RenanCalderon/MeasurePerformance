@@ -15,28 +15,20 @@ elif [ "$1" = "test" ]; then
   echo "$LATEST"
   FILE="$TEST""$LATEST"/dist/MusicTest.exe
   "$FILE"
+
+elif [ "$1" = "app" ]; then
+  echo "Run Music Suite App"
+  export environment=$APP_TYPE
+  echo "Environment: $environment"
+  TEST="/c/Users/renan/Documents/Python/App/MusicSuite/"
+  LATEST=$(ls -1 -t $TEST | head -n 1)
+  echo "$LATEST"
+  FILE="$TEST""$LATEST"/dist/MusicSuite.exe
+  "$FILE"
+
+else
+  echo "Not valid input"
 fi
-#  if [ ! -x "$FILE" ]; then
-#      echo "The file does not have execute permission"
-#
-#
-#      chmod +x "$FILE"
-#      if [ $? -eq 0 ]; then
-#          echo "Execute permission granted to the file."
-#      else
-#          echo "Failed to grant execute permission to the file."
-#          exit 1
-#      fi
-#  fi
-#
-#  "$FILE"
-#
-#elif [ "$APP_TYPE" = "app" ]; then
-#  echo "Run Music Suite App"
-#  export environment=$APP_TYPE
-#  echo "Environment: $environment"
-#else
-#  echo "Bad Request"
-#fi
+
 
 
