@@ -6,5 +6,3 @@ config*
 .idea/
 deploy_app.sh
 run_music_suite.sh
-
-
