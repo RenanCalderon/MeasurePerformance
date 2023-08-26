@@ -5,15 +5,22 @@ LOG = logging.getLogger()
 LOG.setLevel("INFO")
 
 
-def get_latest_als_file(project):
-    als_files = glob.glob(os.path.join(project, "*.als"))
-    file_dates = defaultdict(list)
+def get_latest_als_file(project, file_type="als"):
 
-    if als_files:
-        for als_file in als_files:
-            file_date = os.path.basename(als_file).split("_")[-1].split(".")[0]
-            file_dates[file_date].append(als_file)
-        # LOG.info(f"Dictionary: {file_dates}")
+    end = ["*.als"]
+    if file_type != "als":
+        end = ["*.wav", "*.mp3"]
+
+    files = []
+    file_dates = defaultdict(list)
+    for options in end:
+        files.extend(glob.glob(os.path.join(project, options)))
+
+    if files:
+        for file in files:
+            file_date = os.path.basename(file).split("_")[-1].split(".")[0]
+            file_dates[file_date].append(file)
+        LOG.info(f"Dictionary: {file_dates}")
 
         latest_date = max(file_dates.keys())
         latest_files = file_dates[latest_date]
@@ -21,5 +28,5 @@ def get_latest_als_file(project):
 
         return latest_files
     else:
-        print("No ALS files found")
+        print(f"No {file_type} files found")
         return None
