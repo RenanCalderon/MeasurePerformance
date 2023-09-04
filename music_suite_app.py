@@ -7,6 +7,7 @@ from src.stacks.music_performance import MusicPerformance
 from src.stacks.folder_manager import FolderManager
 from src.stacks.dj_rekordbox.dj_rekordbox_app import DjRekordboxWindow
 from src.stacks.ableton.ableton_app import AbletonWindow
+from src.stacks.accounting.accounting_app import AccountingWindow
 from src.log_config import setup_logger
 from config import config
 
@@ -57,32 +58,37 @@ class MainWindow(QMainWindow):
         # Button for Spotify
         btn_spotify = QPushButton("Spotify", self)
         btn_spotify.clicked.connect(self.open_spotify)
-        btn_spotify.setStyleSheet("color: white; font-weight: bold; font-size: 18px; background-color: #2C2C2C;")
+        btn_spotify.setStyleSheet("color: white; font-weight: bold; font-size: 16px; background-color: #2C2C2C;")
 
         # Button for Music Performance
         btn_music_performance = QPushButton("Music Performance", self)
         btn_music_performance.clicked.connect(self.open_music_performance)
-        btn_music_performance.setStyleSheet("color: white; font-weight: bold; font-size: 18px; background-color: #2C2C2C;")
+        btn_music_performance.setStyleSheet("color: white; font-weight: bold; font-size: 16px; background-color: #2C2C2C;")
 
         # Button for Folder Manager
         btn_folder_manager = QPushButton("Folder Manager", self)
         btn_folder_manager.clicked.connect(self.open_folder_manager)
-        btn_folder_manager.setStyleSheet("color: white; font-weight: bold; font-size: 18px; background-color: #2C2C2C;")
+        btn_folder_manager.setStyleSheet("color: white; font-weight: bold; font-size: 16px; background-color: #2C2C2C;")
 
         # Button for Music Analysis
         btn_music_analysis = QPushButton("Music Analysis", self)
         btn_music_analysis.clicked.connect(self.open_music_analysis)
-        btn_music_analysis.setStyleSheet("color: white; font-weight: bold; font-size: 18px; background-color: #2C2C2C;")
+        btn_music_analysis.setStyleSheet("color: white; font-weight: bold; font-size: 16px; background-color: #2C2C2C;")
 
         # Button for Dj/Rekordbox
         btn_dj_rekordbox = QPushButton("Dj/Rekordbox", self)
         btn_dj_rekordbox.clicked.connect(self.open_dj_rekordbox)
-        btn_dj_rekordbox.setStyleSheet("color: white; font-weight: bold; font-size: 18px; background-color: #2C2C2C;")
+        btn_dj_rekordbox.setStyleSheet("color: white; font-weight: bold; font-size: 16px; background-color: #2C2C2C;")
 
         # Button for Ableton
         btn_ableton = QPushButton("Ableton", self)
         btn_ableton.clicked.connect(self.open_ableton)
-        btn_ableton.setStyleSheet("color: white; font-weight: bold; font-size: 18px; background-color: #2C2C2C;")
+        btn_ableton.setStyleSheet("color: white; font-weight: bold; font-size: 16px; background-color: #2C2C2C;")
+
+        # Button for Accounting
+        btn_accounting = QPushButton("Accounting", self)
+        btn_accounting.clicked.connect(self.open_accounting)
+        btn_accounting.setStyleSheet("color: white; font-weight: bold; font-size: 16px; background-color: #2C2C2C;")
 
         # Window layout configuration
         layout = QGridLayout()
@@ -92,6 +98,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(btn_music_analysis, 1, 1)
         layout.addWidget(btn_dj_rekordbox, 2, 0)
         layout.addWidget(btn_ableton, 2, 1)
+        layout.addWidget(btn_accounting, 3, 0)
 
         central_widget = QWidget()
         central_widget.setLayout(layout)
@@ -114,7 +121,7 @@ class MainWindow(QMainWindow):
             button.setFixedSize(button_width, button_height)
 
     def open_spotify(self):
-        print("Spotify functionality")
+        LOG.info("Spotify functionality")
 
     def open_music_performance(self):
         folder_selected = QFileDialog.getExistingDirectory(self, "Select Folder", ABLETON_DIRECTORY)
@@ -124,7 +131,7 @@ class MainWindow(QMainWindow):
             music_performance.start_performance()
 
     def open_folder_manager(self):
-        print("Folder Manager functionality")
+        LOG.info("Folder Manager functionality")
         # Rename File
         folder_selected = QFileDialog.getExistingDirectory(self, "Select Folder", ABLETON_DIRECTORY)
         if folder_selected:
@@ -132,18 +139,22 @@ class MainWindow(QMainWindow):
             folder_manager.rename_als_files()
 
     def open_music_analysis(self):
-        print("Music Analysis functionality")
+        LOG.info("Music Analysis functionality")
 
     def open_dj_rekordbox(self):
-        print("Dj/Rekordbox functionality")
+        LOG.info("Dj/Rekordbox functionality")
         self.dj_window = DjRekordboxWindow(SETS_DIRECTORY)
         self.dj_window.show()
 
     def open_ableton(self):
-        print("Ableton functionality")
+        LOG.info("Ableton functionality")
         self.ableton_window = AbletonWindow(ABLETON_DIRECTORY)
         self.ableton_window.show()
 
+    def open_accounting(self):
+        LOG.info("Accounting functionality")
+        self.accounting_window = AccountingWindow()
+        self.accounting_window.show()
 
 if __name__ == "__main__":
     try:
