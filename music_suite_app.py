@@ -92,13 +92,13 @@ class MainWindow(QMainWindow):
 
         # Window layout configuration
         layout = QGridLayout()
-        layout.addWidget(btn_spotify, 0, 0)
-        layout.addWidget(btn_music_performance, 0, 1)
+        layout.addWidget(btn_ableton, 0, 0)
+        layout.addWidget(btn_accounting, 0, 1)
+        layout.addWidget(btn_dj_rekordbox, 0, 2)
         layout.addWidget(btn_folder_manager, 1, 0)
         layout.addWidget(btn_music_analysis, 1, 1)
-        layout.addWidget(btn_dj_rekordbox, 2, 0)
-        layout.addWidget(btn_ableton, 2, 1)
-        layout.addWidget(btn_accounting, 3, 0)
+        layout.addWidget(btn_music_performance, 1, 2)
+        layout.addWidget(btn_spotify, 2, 0)
 
         central_widget = QWidget()
         central_widget.setLayout(layout)
