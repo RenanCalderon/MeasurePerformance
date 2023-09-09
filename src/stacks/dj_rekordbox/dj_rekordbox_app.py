@@ -12,7 +12,7 @@ LOG = logging.getLogger()
 LOG.setLevel("INFO")
 
 ENVIRONMENT = config.get('environment')
-DATABASE_NAME = config["database"]["mysql_database"]
+DATABASE_NAME = config["database"]["music_database"]
 HOST = config["database"]["mysql_host"]
 USER = config["database"]["mysql_user"]
 PASSWORD = config["database"]["mysql_password"]
