@@ -1,8 +1,12 @@
-import logging
+import logging, os
 from logging.handlers import RotatingFileHandler
+from config import config
+
+log_path = config["directory"]["logs"]
+log_file = os.path.join(log_path, 'app.log')
 
 
-def setup_logger(log_file):
+def setup_logger():
     # Create a logger
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)

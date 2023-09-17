@@ -1,13 +1,13 @@
-import sys, logging, subprocess, traceback
+import sys, subprocess, traceback, os, shutil
 from src.stacks.ableton.src.ableton_utilities import get_latest_als_file
+from src.log_config import setup_logger
 from config import config
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
     QWidget, QPushButton, QFileDialog, QMessageBox, QListWidget, QVBoxLayout, QHBoxLayout, QLabel
 from PyQt5.QtGui import QFont, QColor, QPalette
 from PyQt5.QtCore import Qt
 
-LOG = logging.getLogger()
-LOG.setLevel("INFO")
+LOG = setup_logger()
 ABLETON_PATH = config.get("ableton_config").get("exe_path")
 
 
@@ -23,16 +23,23 @@ class AbletonWindow(QMainWindow):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
-        # Button for saving Dj Set
+        # Button for Open Ableton Project
         btn_open_project = QPushButton("Open Project", self)
         btn_open_project.clicked.connect(self.open_project)
         btn_open_project.setStyleSheet("color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C;")
+
+        # Button for Rename final files
+        btn_rename_final_files = QPushButton("Rename Final Files", self)
+        btn_rename_final_files.clicked.connect(self.rename_final_files)
+        btn_rename_final_files.setStyleSheet(
+            "color: white; font-weight: bold; font-size: 14px; background-color: #2C2C2C;")
 
         # Add more buttons and functionalities here as needed
 
         # Window layout configuration
         layout = QGridLayout()
         layout.addWidget(btn_open_project, 0, 0)
+        layout.addWidget(btn_rename_final_files, 1, 0)
 
         central_widget = QWidget()
         central_widget.setLayout(layout)
@@ -127,6 +134,29 @@ class AbletonWindow(QMainWindow):
                 print("Error:", e)
         elif dialog.clickedButton() == cancel_button:
             dialog.close()
+
+    def rename_final_files(self):
+        project = QFileDialog.getExistingDirectory(self, "Select Project Directory", self.selected_directory)
+
+        print(f"Current directory: {project}")
+        if not project:
+            LOG.info("No project directory selected.")
+            return
+
+        new_folder_name = "Final_Audio_Files"
+        new_folder = os.path.join(project, new_folder_name)
+        print(f"New Folder {new_folder}")
+        if os.path.exists(new_folder):
+            shutil.rmtree(new_folder)
+        os.makedirs(new_folder)
+
+        latest_files = get_latest_als_file(project, file_type="audio")
+        for file in latest_files:
+            elements = file.split("\\")[-1].split(".")
+            print(elements)
+            new_name = os.path.join(new_folder, f"Sigmahz - {elements[0].split('_')[0].replace('-', ' ')} (Original Mix).{elements[-1]}")
+            shutil.copy(file, new_name)
+        LOG.info(f"Files renamed successfully")
 
 
 if __name__ == "__main__":
