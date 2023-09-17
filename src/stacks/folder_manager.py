@@ -56,7 +56,7 @@ class RenameALSDialog(QDialog):
         self.cancel_button.clicked.connect(self.reject)
 
     def get_user_input(self):
-        name = self.name_edit.text()
+        name = self.name_edit.text().replace(" ", "-")
         key = self.key_edit.text()
         stage = self.stage_edit.text()
         return name, key, stage
@@ -128,8 +128,11 @@ class FolderManager:
 
                         # Create the new file name with the parameters and the original date
                         new_file_name = f"{name}_{key}_{stage}_{date_part}.als"
+                        print(f"New File: {new_file_name}")
                         new_file_path = os.path.join(self.working_directory, new_file_name)
-                        os.rename(old_file_path, new_file_path)
+                        print(f"New File Path: {new_file_path}")
+                        if not os.path.exists(new_file_path):
+                            os.rename(old_file_path, new_file_path)
                 print("Renaming completed.")
             else:
                 print("Operation canceled.")
