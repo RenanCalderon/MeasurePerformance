@@ -146,15 +146,17 @@ class AbletonWindow(QMainWindow):
         new_folder_name = "Final_Audio_Files"
         new_folder = os.path.join(project, new_folder_name)
         print(f"New Folder {new_folder}")
-        if not os.path.exists(new_folder):
-            os.makedirs(new_folder)
+        if os.path.exists(new_folder):
+            shutil.rmtree(new_folder)
+        os.makedirs(new_folder)
 
         latest_files = get_latest_als_file(project, file_type="audio")
         for file in latest_files:
             elements = file.split("\\")[-1].split(".")
             print(elements)
-            new_name = os.path.join(new_folder, f"Sigmahz - {elements[0].split('_')[0]} (Original Mix).{elements[-1]}")
+            new_name = os.path.join(new_folder, f"Sigmahz - {elements[0].split('_')[0].replace('-', ' ')} (Original Mix).{elements[-1]}")
             shutil.copy(file, new_name)
+        LOG.info(f"Files renamed successfully")
 
 
 if __name__ == "__main__":
