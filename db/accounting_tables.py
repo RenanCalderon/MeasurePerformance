@@ -7,7 +7,7 @@ LOG = logging.getLogger()
 
 def create_accounting_tables(environment):
     if not environment:
-        print("Please enter the database name.")
+        print("Please enter the database name: ")
         return
 
     database_name = "accounting_" + environment
