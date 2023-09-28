@@ -7,10 +7,6 @@ import logging
 LOG = logging.getLogger()
 LOG.setLevel("INFO")
 
-# Default Value
-QUERY_CREATE = config["query"]["songs_table"]
-QUERY_INSERT = config["query"]["songs_insert"]
-
 
 def create_connection(host, user, password, database_name):
     try:
@@ -69,24 +65,7 @@ def delete_database(connection):
         raise
 
 
-def create_table(connection, table_name, query=QUERY_CREATE):
-    # Create a new table if it does not exist yet
-    create_table_query = query.format(table_name)
-    cursor = connection.cursor()
-
-    try:
-        cursor.execute(create_table_query)
-        connection.commit()
-        LOG.info(f"Table {table_name} created successfully.")
-    except mysql.connector.Error as err:
-        LOG.error(f"Failed to create table: {err}")
-        connection.rollback()
-        raise
-    finally:
-        cursor.close()
-
-
-def insert_data(connection, data_frame, table_name, query=QUERY_INSERT):
+def insert_data(connection, data_frame, table_name, query):
     # Convert the Pandas DataFrame to a list of tuples for data insertion
     data_to_insert = [tuple(row) for row in data_frame.values]
 
