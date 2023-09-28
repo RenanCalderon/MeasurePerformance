@@ -65,6 +65,8 @@ def read_file_to_dataframe(file_path):
         # Add camelot circle column
         camelot_circle.add_camelot_key_column(df, df["key_song"])
 
+        df['duration'] = pd.to_datetime(df['duration'], format='%M:%S').dt.time
+
         # Combine the values of the desired columns into a single string
         df["Combined"] = df["name"] + df["artist"] + df["genre"] + df["remix"] + df["key_song"] + df["bpm"]
 
@@ -75,6 +77,8 @@ def read_file_to_dataframe(file_path):
         df.drop(columns=["Combined"], inplace=True)
 
         df["rating"] = df["rating"].apply(assign_rating_reference)
+
+        df['song_order'] = pd.to_numeric(df['song_order'], errors='coerce')
 
         LOG.info("DataFrame successfully generated.")
         return df
