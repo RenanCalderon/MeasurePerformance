@@ -46,11 +46,15 @@ def create_music_tables(environment):
         # Create Expenses Dimension Table
         create_sets_table_query = """
                 CREATE TABLE IF NOT EXISTS sets (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    id VARCHAR(255) PRIMARY KEY,
                     name VARCHAR(255),
                     bpm_range VARCHAR(10),
                     date DATE,
-                    songs JSON NOT NULL
+                    first_key VARCHAR(3),
+                    first_camelot VARCHAR(3),
+                    last_key VARCHAR(3),
+                    last_camelot VARCHAR(3),
+                    songs TEXT
                 )
             """
 
