@@ -90,3 +90,24 @@ def read_file_to_dataframe(file_path):
     except Exception as e:
         LOG.error(f"An error occurred while reading the file: {file_path}")
         raise e
+
+
+def sets_dataframe(elements, keys, songs):
+    column_names = ["name", "bpm_range", "date", "first_key", "first_camelot", "last_key", "last_camelot"]
+    elements_df = pd.DataFrame(elements)
+    elements_df = elements_df.T
+    keys_df = pd.DataFrame(keys)
+    keys_df = keys_df.T
+    df = pd.concat([elements_df, keys_df], axis=1)
+    df.columns = column_names
+    df["songs"] = [songs] * len(df)
+
+    # Combine the values of the desired columns into a single string
+    df["Combined"] = df["name"] + df["bpm_range"] + df["date"]
+
+    # Apply a hash function (SHA-256) to generate the ID
+    df["id"] = df["Combined"].apply(lambda x: hashlib.sha256(x.encode()).hexdigest())
+
+    df = df[['id'] + column_names + ['songs']]
+
+    return df
