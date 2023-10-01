@@ -1,4 +1,4 @@
-import sys, logging, os
+import sys, os
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
     QWidget, QPushButton
 from PyQt5.QtGui import QFont, QColor, QPalette

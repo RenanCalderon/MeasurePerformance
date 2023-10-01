@@ -1,4 +1,4 @@
-import sys, traceback, os
+import sys, traceback
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QWidget, QPushButton, QFileDialog, QLineEdit
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QColor, QPalette

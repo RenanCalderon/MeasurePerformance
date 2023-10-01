@@ -1,4 +1,4 @@
-import glob, os, logging
+import glob, os
 from collections import defaultdict
 from src.log_config import LOG
 

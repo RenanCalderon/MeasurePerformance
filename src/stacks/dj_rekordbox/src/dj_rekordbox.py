@@ -1,4 +1,4 @@
-import csv, logging
+import csv
 import pandas as pd
 import numpy as np
 import uuid
