@@ -23,8 +23,7 @@ def create_music_tables(environment):
         # Create Expenses Dimension Table
         create_songs_table_query = """
             CREATE TABLE IF NOT EXISTS songs (
-                id VARCHAR(255) PRIMARY KEY,
-                song_order INT,
+                id VARCHAR(36) PRIMARY KEY,
                 name VARCHAR(255),
                 artist VARCHAR(255),
                 remix VARCHAR(255) NULL,
@@ -46,7 +45,7 @@ def create_music_tables(environment):
         # Create Expenses Dimension Table
         create_sets_table_query = """
                 CREATE TABLE IF NOT EXISTS sets (
-                    id VARCHAR(255) PRIMARY KEY,
+                    id VARCHAR(36) PRIMARY KEY,
                     name VARCHAR(255),
                     bpm_range VARCHAR(10),
                     date DATE,
