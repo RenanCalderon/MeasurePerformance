@@ -1,6 +1,7 @@
 import csv, logging
 import pandas as pd
-import hashlib
+import numpy as np
+import uuid
 from src.stacks.dj_rekordbox.src import camelot_circle
 from src.stacks.dj_rekordbox.src.config_dj_rk import expected_column_names
 
@@ -25,6 +26,17 @@ def assign_rating_reference(rating_str):
         return 5
     else:
         return None
+
+
+def generate_uuid_from_list(data_list):
+    # Convertir la lista en una cadena concatenada
+    data_to_hash = ''.join(map(str, data_list))
+
+    # Generar un UUID basado en la cadena concatenada
+    generated_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, data_to_hash)
+
+    # El UUID resultante se utiliza como ID
+    return str(generated_uuid)
 
 
 def read_file_to_dataframe(file_path):
@@ -68,13 +80,13 @@ def read_file_to_dataframe(file_path):
         df['duration'] = pd.to_datetime(df['duration'], format='%M:%S').dt.time
 
         # Combine the values of the desired columns into a single string
-        df["Combined"] = df["name"] + df["artist"] + df["genre"] + df["remix"] + df["key_song"] + df["bpm"]
+        df["Combined"] = df[["name", "artist", "genre", "remix", "key_song", "bpm"]].agg(''.join, axis=1)
 
         # Apply a hash function (SHA-256) to generate the ID
-        df["id"] = df["Combined"].apply(lambda x: hashlib.sha256(x.encode()).hexdigest())
+        df["id"] = np.vectorize(generate_uuid_from_list)(df["Combined"].values)
 
         # Drop the "Combined" column if not needed
-        df.drop(columns=["Combined"], inplace=True)
+        df.drop(columns=["Combined"], axis=1, inplace=True)
 
         df["rating"] = df["rating"].apply(assign_rating_reference)
 
@@ -103,10 +115,8 @@ def sets_dataframe(elements, keys, songs):
     df["songs"] = [songs] * len(df)
 
     # Combine the values of the desired columns into a single string
-    df["Combined"] = df["name"] + df["bpm_range"] + df["date"]
-
-    # Apply a hash function (SHA-256) to generate the ID
-    df["id"] = df["Combined"].apply(lambda x: hashlib.sha256(x.encode()).hexdigest())
+    df["Combined"] = df[["name", "bpm_range", "date"]].agg(''.join, axis=1)
+    df["id"] = np.vectorize(generate_uuid_from_list)(df["Combined"].values)
 
     df = df[['id'] + column_names + ['songs']]
 
