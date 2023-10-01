@@ -1,9 +1,8 @@
-import logging, os
+import logging, os, sys
 from logging.handlers import RotatingFileHandler
-from config import config
 
-log_path = config["directory"]["logs"]
-log_file = os.path.join(log_path, 'app.log')
+executable_path = os.path.dirname(sys.argv[0])
+log_file = os.path.join(executable_path, 'app.log')
 
 
 def setup_logger():
