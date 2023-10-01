@@ -125,15 +125,18 @@ class AddExpenseIncomeDialog(QDialog):
             category = self.category_edit.text()
             accounting_account = self.accounting_account_edit.text()
             payment_method = self.payment_method_edit.text()
-
+            currency = self.currency_edit.text()
+            notes = self.notes_edit.text()
             # Insert query with updated column names
             insert_query = f"""
-                INSERT INTO {table_name} (date, amount, description, category, accounting_account, payment_method)
-                VALUES (%s, %s, %s, %s, %s, %s)
+                INSERT INTO {table_name} (date, amount, description, category, accounting_account, 
+                                          payment_method, currency, notes)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """
 
             # Values to insert
-            values = (date, amount, description, category, accounting_account, payment_method)
+            values = (date, amount, description, category, accounting_account,
+                      payment_method, currency, notes)
 
             # Execute the insertion
             cursor.execute(insert_query, values)
