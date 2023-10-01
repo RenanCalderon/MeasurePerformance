@@ -7,7 +7,7 @@ LOG = logging.getLogger()
 
 def create_music_tables(environment):
     if not environment:
-        print("Please enter the database name: ")
+        print("Please enter the database name")
         return
 
     database_name = "music_" + environment
@@ -71,5 +71,11 @@ if __name__ == "__main__":
     host = config["database"]["mysql_host"]
     user = config["database"]["mysql_user"]
     password = config["database"]["mysql_password"]
-    environment = input("Enter the environment name: ")
+    environment = input("""Environments:
+1.- dev
+2.- test
+3.- suite
+
+Enter the environment name: """)
+
     create_music_tables(environment)
