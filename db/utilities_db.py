@@ -1,7 +1,5 @@
 import mysql.connector, sys
 sys.path.append(r'C:\Users\renan\Documents\Python\MusicSuite')
-
-from db.config_db import config
 import logging
 
 LOG = logging.getLogger()
