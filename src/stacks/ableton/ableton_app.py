@@ -1,13 +1,12 @@
 import sys, subprocess, traceback, os, shutil
 from src.stacks.ableton.src.ableton_utilities import get_latest_als_file
-from src.log_config import setup_logger
+from src.log_config import LOG
 from config import config
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
     QWidget, QPushButton, QFileDialog, QMessageBox, QListWidget, QVBoxLayout, QHBoxLayout, QLabel
 from PyQt5.QtGui import QFont, QColor, QPalette
 from PyQt5.QtCore import Qt
 
-LOG = setup_logger()
 ABLETON_PATH = config.get("ableton_config").get("exe_path")
 
 
@@ -64,7 +63,7 @@ class AbletonWindow(QMainWindow):
                 try:
                     subprocess.run([ABLETON_PATH, latest_files[0]])
                 except OSError as e:
-                    print("Error:", e)
+                    LOG.error("Error:", e)
 
     def select_project_dialog(self, files):
         dialog = QMessageBox(self)
@@ -131,21 +130,21 @@ class AbletonWindow(QMainWindow):
             try:
                 subprocess.run([ABLETON_PATH, selected_project])
             except OSError as e:
-                print("Error:", e)
+                LOG.error("Error:", e)
         elif dialog.clickedButton() == cancel_button:
             dialog.close()
 
     def rename_final_files(self):
         project = QFileDialog.getExistingDirectory(self, "Select Project Directory", self.selected_directory)
 
-        print(f"Current directory: {project}")
+        LOG.info(f"Current directory: {project}")
         if not project:
             LOG.info("No project directory selected.")
             return
 
         new_folder_name = "Final_Audio_Files"
         new_folder = os.path.join(project, new_folder_name)
-        print(f"New Folder {new_folder}")
+        LOG.info(f"New Folder {new_folder}")
         if os.path.exists(new_folder):
             shutil.rmtree(new_folder)
         os.makedirs(new_folder)
@@ -153,7 +152,7 @@ class AbletonWindow(QMainWindow):
         latest_files = get_latest_als_file(project, file_type="audio")
         for file in latest_files:
             elements = file.split("\\")[-1].split(".")
-            print(elements)
+            LOG.info(elements)
             new_name = os.path.join(new_folder, f"Sigmahz - {elements[0].split('_')[0].replace('-', ' ')} (Original Mix).{elements[-1]}")
             shutil.copy(file, new_name)
         LOG.info(f"Files renamed successfully")
