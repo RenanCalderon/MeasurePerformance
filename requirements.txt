@@ -1,4 +1,5 @@
 PyQt5
 pandas
+numpy
 mysql-connector-python
 pyinstaller
