@@ -75,10 +75,11 @@ class DjRekordboxWindow(QMainWindow):
             songs = str(songs)
 
             df_sets = sets_dataframe(elements, keys, songs)
+            df_songs = df.drop('song_order', axis=1)
 
             # # Load Songs and Sets into the DB Music Suite
             connection = create_connection(HOST, USER, PASSWORD, DATABASE_NAME)
-            insert_data(connection, df, "songs", QUERY_SONGS)
+            insert_data(connection, df_songs, "songs", QUERY_SONGS)
             insert_data(connection, df_sets, "sets", QUERY_SETS)
         self.close()
 
