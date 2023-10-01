@@ -1,8 +1,6 @@
 import glob, os, logging
 from collections import defaultdict
-
-LOG = logging.getLogger()
-LOG.setLevel("INFO")
+from src.log_config import LOG
 
 
 def get_latest_als_file(project, file_type="als"):
@@ -28,5 +26,5 @@ def get_latest_als_file(project, file_type="als"):
 
         return latest_files
     else:
-        print(f"No {file_type} files found")
+        LOG.warning(f"No {file_type} files found")
         return None

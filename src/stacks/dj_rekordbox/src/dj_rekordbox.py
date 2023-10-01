@@ -4,9 +4,7 @@ import numpy as np
 import uuid
 from src.stacks.dj_rekordbox.src import camelot_circle
 from src.stacks.dj_rekordbox.src.config_dj_rk import expected_column_names
-
-LOG = logging.getLogger()
-LOG.setLevel("INFO")
+from src.log_config import LOG
 
 
 def assign_rating_reference(rating_str):
@@ -29,13 +27,9 @@ def assign_rating_reference(rating_str):
 
 
 def generate_uuid_from_list(data_list):
-    # Convertir la lista en una cadena concatenada
     data_to_hash = ''.join(map(str, data_list))
-
-    # Generar un UUID basado en la cadena concatenada
     generated_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, data_to_hash)
 
-    # El UUID resultante se utiliza como ID
     return str(generated_uuid)
 
 

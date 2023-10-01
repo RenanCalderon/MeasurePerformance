@@ -8,9 +8,7 @@ from db.utilities_db import create_connection, insert_data
 from db.config_db import column_orders
 from config import config
 from db.config_db import config as config_db
-
-LOG = logging.getLogger()
-LOG.setLevel("INFO")
+from src.log_config import LOG
 
 ENVIRONMENT = config.get('environment')
 DATABASE_NAME = config["database"]["music_database"]
@@ -28,7 +26,6 @@ class DjRekordboxWindow(QMainWindow):
         # Window configuration
         self.setWindowTitle("Dj/Rekordbox Functionality")
         self.setGeometry(100, 100, 300, 200)
-        LOG.info(f"Environment: {ENVIRONMENT}")
 
         # Create a central widget for the window
         central_widget = QWidget()

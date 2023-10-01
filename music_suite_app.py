@@ -8,14 +8,12 @@ from src.stacks.folder_manager import FolderManager
 from src.stacks.dj_rekordbox.dj_rekordbox_app import DjRekordboxWindow
 from src.stacks.ableton.ableton_app import AbletonWindow
 from src.stacks.accounting.accounting_app import AccountingWindow
-from src.log_config import setup_logger
+from src.log_config import LOG
 from config import config
 
 ENVIRONMENT = config.get('environment')
 ABLETON_DIRECTORY = config.get('directory').get('ableton_projects')
 SETS_DIRECTORY = config.get('directory').get('dj_sets')
-
-LOG = setup_logger()
 
 LOG.info(f"Environment: {ENVIRONMENT}")
 LOG.info(f"Ableton Directory: {ABLETON_DIRECTORY}")
@@ -136,6 +134,7 @@ class MainWindow(QMainWindow):
             folder_manager = FolderManager(folder_selected)
             folder_manager.rename_als_files()
 
+
     def open_music_analysis(self):
         LOG.info("Music Analysis functionality")
 
@@ -153,6 +152,7 @@ class MainWindow(QMainWindow):
         LOG.info("Accounting functionality")
         self.accounting_window = AccountingWindow()
         self.accounting_window.show()
+
 
 if __name__ == "__main__":
     try:

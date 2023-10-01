@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel, QLineEdi
 from PyQt5.QtCore import Qt, QDate
 from db.utilities_db import create_connection
 from config import config
+from src.log_config import LOG
 
 host = config["database"]["mysql_host"]
 user = config["database"]["mysql_user"]
@@ -152,7 +153,7 @@ class AddExpenseIncomeDialog(QDialog):
             self.accept()
 
         except Exception as e:
-            print("Error inserting record:", str(e))
+            LOG.error("Error inserting record:", str(e))
 
 
 class AccountingWindow(QMainWindow):
